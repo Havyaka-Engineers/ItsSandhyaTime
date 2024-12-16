@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:prod": "NODE_ENV=production npm run build",
+    "build:dev": "cross-env NODE_ENV=development npm run build",
+    "deploy:prod": "npm run build:prod && firebase deploy --only hosting:prod",
+    "deploy:dev": "npm run build:dev && firebase deploy --only hosting:dev"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -31,6 +35,7 @@
     "@types/vimeo__player": "^2.18.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.8.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",

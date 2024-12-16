@@ -1,5 +1,19 @@
 {
   "projects": {
     "default": "its-sandhya-time"
-  }
+  },
+  "targets": {
+    "its-sandhya-time": {
+      "hosting": {
+        "prod": [
+          "its-sandhya-time"
+        ],
+        "dev": [
+          "its-sandhya-time-dev"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

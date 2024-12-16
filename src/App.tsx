@@ -1,5 +1,5 @@
 import { App as KonstaApp, Page, Preloader, Block } from 'konsta/react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { auth } from './firebase.config'; 
 import firebase from './firebase.config';
