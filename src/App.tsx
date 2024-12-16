@@ -38,13 +38,13 @@ function App() {
     <KonstaApp theme="material" dark>
       <Router>
         <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/app" element={user ? <Navigate to="/app/dashboard" /> : <Navigate to="/app/signin" />} />
-          <Route path="/app/dashboard" element={user ? <Dashboard /> : <Navigate to="/app/signin" />} />
-          <Route path="/app/signin" element={<SignIn />} />
-          <Route path="/app/review-settings" element={<ReviewSessionSetting />} />
-          <Route path="/app/sandhya-player" element={<SandhyaPlayer />} />
-          <Route path="/app/sandhya-session" element={<SandhyaSession />} />
+          {/* <Route path="/" element={<Landing />} /> */}
+          <Route path="/" element={user ? <Dashboard /> : <Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/review-settings" element={<ReviewSessionSetting />} />
+          <Route path="/sandhya-player" element={<SandhyaPlayer />} />
+          <Route path="/sandhya-session" element={<SandhyaSession />} />
         </Routes>
       </Router>
     </KonstaApp>

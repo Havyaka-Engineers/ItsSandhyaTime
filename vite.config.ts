@@ -11,9 +11,9 @@ export default defineConfig({
       enabled: true,
     },
     manifest: {
-      name: 'Sandhya PWA App',
-      short_name: 'Sandhya',
-      description: 'PWA App for Vedic Learning',
+      name: "It's Sandhya Time!",
+      short_name: "It's Sandhya Time!",
+      description: 'PWA App for Sandhya Prayers',
       theme_color: '#ffffff',
       background_color: '#ffffff',
       start_url: '/',
