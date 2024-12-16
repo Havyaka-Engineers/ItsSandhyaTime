@@ -1,6 +1,6 @@
 # ItsSandhyaTime
 
-How to deploy app to Firebase
+## How to deploy app to Firebase
 
 Here are the streamlined steps to deploy to the Firebase development environment:
 
