@@ -27,3 +27,4 @@ dist-ssr
 
 # firebase
 .firebase
+firebase.config.prod.ts
