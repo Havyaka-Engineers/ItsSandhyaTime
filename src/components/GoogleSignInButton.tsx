@@ -1,7 +1,6 @@
 // GoogleSignInButton.tsx
 import { useState } from 'react';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../firebase.config';
 import { Navigate } from 'react-router-dom';
 import {Block, Button, Preloader } from 'konsta/react';
@@ -15,8 +14,8 @@ function GoogleSignInButton() {
     //sign in is async op. Until, the promise resolves, we need to show loading icon.
     setLoading(true);
 
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
       .then((result) => {
         // Handle successful sign-in
         console.log('Google Sign In Successful.', result.user);
