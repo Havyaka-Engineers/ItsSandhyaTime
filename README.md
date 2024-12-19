@@ -1,5 +1,19 @@
 # ItsSandhyaTime
 
+## Initial Setup
+Here are the streamlined steps to deploy to the Firebase development environment:
+
+1. **npm install**
+```bash
+npm install
+```
+
+2. **local dev**
+```bash
+npm run dev
+```
+
+
 ## How to deploy app to Firebase
 
 Here are the streamlined steps to deploy to the Firebase development environment:
