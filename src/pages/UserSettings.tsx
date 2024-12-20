@@ -244,13 +244,13 @@ function UserSettings() {
               large
               onClick={handleSave}
               colors={{
-                fillBgMaterial: "bg-orange-700",
+                fillBgMaterial: "bg-primary",
                 fillTextMaterial: "text-white",
-                fillActiveBgMaterial: "active:bg-orange-800",
+                fillActiveBgMaterial: "active:bg-primary/90",
               }}
               className="w-full"
             >
-              Save
+              Save and Continue
             </Button>
           </div>
         </Block>
