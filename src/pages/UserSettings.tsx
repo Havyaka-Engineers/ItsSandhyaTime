@@ -12,8 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase.config";
 import { userService } from "../services/userService";
 import { UserPreferences, VocalPitch } from "../types/UserProfile";
+import LocationPermissionDialog from "../components/LocationPermissionDialog";
 
-function UserSettings() {
+interface UserSettingsProps {
+  onComplete?: () => void;
+}
+
+function UserSettings({ onComplete }: UserSettingsProps) {
   const navigate = useNavigate();
   const isGuestUser = !auth.currentUser?.email;
 
@@ -34,6 +39,7 @@ function UserSettings() {
 
   const [gothraPopoverOpened, setGothraPopoverOpened] = useState(false);
   const popoverTargetRef = useRef(null);
+  const [showLocationDialog, setShowLocationDialog] = useState(false);
 
   useEffect(() => {
     // Only set email and name for Google sign-in users
@@ -48,16 +54,43 @@ function UserSettings() {
 
   const handleSave = async () => {
     try {
-      const userId = auth.currentUser?.uid;
-      if (!userId) return;
+      // Validate required fields
+      if (!isGuestUser && !profile.fullName.trim()) {
+        // Show error or alert that name is required
+        return;
+      }
 
-      await userService.createOrUpdateUser(userId, {
-        ...profile,
-        onboardingCompleted: true,
-      });
-      navigate("/dashboard");
+      // For non-guest users, save to Firebase
+      const userId = auth.currentUser?.uid;
+      if (!isGuestUser && !userId) return;
+
+      if (userId) {
+        await userService.createOrUpdateUser(userId, {
+          ...profile,
+          onboardingCompleted: true,
+        });
+      }
+
+      // Show location dialog after validation passes
+      setShowLocationDialog(true);
     } catch (error) {
       console.error("Error saving user settings:", error);
+    }
+  };
+
+  const handleLocationGranted = async (coordinates: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    try {
+      // Just log the coordinates for now
+      console.log("Location coordinates:", coordinates);
+
+      // Close dialog and complete onboarding
+      setShowLocationDialog(false);
+      onComplete?.();
+    } catch (error) {
+      console.error("Error handling location:", error);
     }
   };
 
@@ -249,12 +282,22 @@ function UserSettings() {
                 fillActiveBgMaterial: "active:bg-primary/90",
               }}
               className="w-full"
+              touchRipple={false}
             >
               Save and Continue
             </Button>
           </div>
         </Block>
       </div>
+
+      <LocationPermissionDialog
+        opened={showLocationDialog}
+        onClose={() => {
+          setShowLocationDialog(false);
+          onComplete?.();
+        }}
+        onPermissionGranted={handleLocationGranted}
+      />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import SandhyaSession from "./pages/SandhyaSession";
 import { User } from "firebase/auth";
 import UserSettings from "./pages/UserSettings";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
+import SunTimings from "./pages/SunTimings";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -55,6 +56,10 @@ function App() {
     };
   }, []);
 
+  const handleOnboardingComplete = () => {
+    // This method is now empty as the location dialog is handled in UserSettings
+  };
+
   if (showSplash || loading) {
     return (
       <KonstaApp theme="material" dark>
@@ -90,10 +95,10 @@ function App() {
                 onboardingCompleted ? (
                   <Navigate to="/dashboard" />
                 ) : (
-                  <UserSettings />
+                  <UserSettings onComplete={handleOnboardingComplete} />
                 )
               ) : (
-                <UserSettings />
+                <UserSettings onComplete={handleOnboardingComplete} />
               )
             }
           />
@@ -115,6 +120,7 @@ function App() {
           <Route path="/review-settings" element={<ReviewSessionSetting />} />
           <Route path="/sandhya-player" element={<SandhyaPlayer />} />
           <Route path="/sandhya-session" element={<SandhyaSession />} />
+          <Route path="/sun-timings" element={<SunTimings />} />
         </Routes>
       </Router>
     </KonstaApp>
