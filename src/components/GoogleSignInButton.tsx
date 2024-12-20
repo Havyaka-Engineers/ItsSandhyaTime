@@ -1,58 +1,60 @@
 // GoogleSignInButton.tsx
-import { useState } from 'react';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../firebase.config';
-import { Navigate } from 'react-router-dom';
-import {Block, Button, Preloader } from 'konsta/react';
+import { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../firebase.config";
+import { Navigate } from "react-router-dom";
+import { Block, Button, Preloader } from "konsta/react";
+import { Google as GoogleIcon } from "@mui/icons-material";
 
 function GoogleSignInButton() {
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const signInWithGoogle = () => {
-    
-    //sign in is async op. Until, the promise resolves, we need to show loading icon.
     setLoading(true);
 
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // Handle successful sign-in
-        console.log('Google Sign In Successful.', result.user);
+        console.log("Google Sign In Successful.", result.user);
         setSignedIn(true);
       })
       .catch((error) => {
-        // Handle errors
-        console.error('Error during sign-in:', error);
+        console.error("Error during sign-in:", error);
       })
       .finally(() => {
         setLoading(false);
       });
   };
-  
-  if(signedIn) {
-    return <Navigate to="/dashboard" />
+
+  if (signedIn) {
+    return <Navigate to="/onboarding" />;
   }
 
   return (
-    <Block className='text-center'>
+    <Block className="w-full">
       {loading ? (
-        <Preloader />
+        <div className="flex justify-center">
+          <Preloader />
+        </div>
       ) : (
         <Button
-              large
-              onClick={signInWithGoogle}
-              className="flex justify-center items-center bg-transparent p-0 border-none cursor-pointer"
+          large
+          onClick={signInWithGoogle}
+          colors={{
+            fillBgMaterial: "bg-primary",
+            fillTextMaterial: "text-white",
+            fillActiveBgMaterial: "active:bg-primary/90",
+          }}
+          className="flex justify-center items-center gap-2 w-full"
+          touchRipple={false}
         >
-          <img
-            src="/android_neutral_rd_ctn@1x.png"
-            alt="Sign In with Google"
-            className="w-full h-auto"
-          />
+          <GoogleIcon className="w-5 h-5 text-white" />
+          <span className="text-sm font-medium">Sign in with Google</span>
         </Button>
       )}
-    </Block>  
+    </Block>
   );
-};
+}
 
 export default GoogleSignInButton;
