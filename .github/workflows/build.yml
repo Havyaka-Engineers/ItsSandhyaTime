@@ -1,0 +1,35 @@
+name: Build PWA App
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for dev
+        if: github.ref == 'refs/heads/dev'
+        run: firebase target:apply hosting dev its-sandhya-time-dev && npm run build:dev
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITS_SANDHYA_TIME }}
+
+      - name: Build for production
+        if: github.ref == 'refs/heads/main'
+        run: firebase target:apply hosting prod its-sandhya-time && npm run build:prod
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITS_SANDHYA_TIME }}
