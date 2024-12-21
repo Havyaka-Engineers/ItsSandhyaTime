@@ -1,15 +1,15 @@
-import { Block, Button, Link, Navbar, Page } from 'konsta/react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Block, Button, Link, Navbar, Page } from "konsta/react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from 'react';
 import { SandhyaPlayerMachine } from '../machines/SandhyaPlayerMachine';
 import { useMachine } from '@xstate/react';
 import { SessionSettings } from '../types/SessionSettings';
-import {
-  PauseIcon,
-  PlayIcon,
-  // NextStepIcon,
-  // PreviousStepIcon
-} from '../components/Icons';
+import { 
+  PauseIcon, 
+  PlayIcon, 
+  // NextStepIcon, 
+  // PreviousStepIcon 
+} from "../components/Icons";
 import { formatTime } from '../utils/durationCalculator';
 
 function SandhyaPlayer() {
@@ -20,12 +20,12 @@ function SandhyaPlayer() {
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
 
-  console.log('SandhyaPlayer Instantiated!');
+  console.log("SandhyaPlayer Instantiated!");
 
   // Initialize the machine with settings
   const [state, send] = useMachine(SandhyaPlayerMachine, {
     input: {
-      sessionSettings: sessionSettings,
+      sessionSettings: sessionSettings
     },
   });
 
@@ -36,15 +36,15 @@ function SandhyaPlayer() {
     }
 
     if (containerRef.current) {
-      send({
-        type: 'SESSION_STARTED',
-        container: containerRef.current,
+      send({ 
+        type: 'SESSION_STARTED', 
+        container: containerRef.current
       });
     }
   }, [containerRef.current, send]);
 
   useEffect(() => {
-    console.log('current satate value', state.value);
+    console.log("current satate value", state.value);
     // console.log("containerRef.current", containerRef.current);
   }, [state, send]);
 
@@ -54,7 +54,7 @@ function SandhyaPlayer() {
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
-
+    
     if (state.matches('playingLesson')) {
       controlsTimeoutRef.current = setTimeout(() => {
         setShowControls(false);
@@ -87,41 +87,43 @@ function SandhyaPlayer() {
       <Navbar
         centerTitle
         title="Player"
-        left={
-          <Link navbar onClick={() => navigate('/dashboard')}>
-            back
-          </Link>
-        }
+        left={<Link navbar onClick={() => navigate('/dashboard')}>back</Link>}
       />
-
+      
       {/* Video container with overlay - 70% height */}
-      <div className="relative" style={{ height: '70%' }} onClick={handleContainerClick}>
+      <div 
+        className="relative" 
+        style={{ height: '70%' }}
+        onClick={handleContainerClick}
+      >
         {/* Video container */}
-        <div ref={containerRef} className="absolute inset-0 bg-black" />
-
+        <div 
+          ref={containerRef}
+          className="absolute inset-0 bg-black"
+        />
+        
         {/* Overlay Controls - only play/pause */}
-        <div
+        <div 
           className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
             showControls ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <Button
+          <Button 
             clear
             large
             onClick={(e) => {
               e.stopPropagation();
               if (state.matches('playingLesson')) {
-                send({ type: 'PAUSE' });
+                send({type: 'PAUSE'});
               } else {
-                send({ type: 'RESUME' });
+                send({type: 'RESUME'});
               }
             }}
           >
-            {state.matches('playingLesson') ? (
-              <PauseIcon className="w-16 h-16 text-white" />
-            ) : (
+            {state.matches('playingLesson') ? 
+              <PauseIcon className="w-16 h-16 text-white" /> : 
               <PlayIcon className="w-16 h-16 text-white" />
-            )}
+            }
           </Button>
         </div>
       </div>
@@ -131,8 +133,9 @@ function SandhyaPlayer() {
         {/* Lesson Title */}
         <Block className="text-center mb-4 !p-0">
           <Block strong inset className="!m-0 text-lg">
-            {state.context.lessons[state.context.currentLessonIndex]?.title || 'Loading...'} ({state.context.currentLessonIndex + 1}
-            /{state.context.lessons.length})
+            {state.context.lessons[state.context.currentLessonIndex]?.title || 'Loading...'} 
+            {' '}
+            ({state.context.currentLessonIndex + 1}/{state.context.lessons.length})
           </Block>
         </Block>
 
@@ -147,4 +150,4 @@ function SandhyaPlayer() {
   );
 }
 
-export default SandhyaPlayer;
+export default SandhyaPlayer; 

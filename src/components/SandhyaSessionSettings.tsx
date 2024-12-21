@@ -1,6 +1,6 @@
-import { Sheet, List, ListItem, Navbar, Button, Block } from 'konsta/react';
+import { Sheet, List, ListItem, Navbar, Button, Block } from "konsta/react";
 import { SessionSettings } from '../types/SessionSettings';
-import {
+import { 
   Speed as SpeedIcon,
   School as SchoolIcon,
   Language as LanguageIcon,
@@ -20,12 +20,12 @@ interface SandhyaSessionSettingsProps {
   onSettingsChange: (settings: SessionSettings) => void;
 }
 
-function SandhyaSessionSettings({
-  opened,
-  onClose,
-  onSettingsClick,
+function SandhyaSessionSettings({ 
+  opened, 
+  onClose, 
+  onSettingsClick, 
   sessionSettings,
-  onSettingsChange,
+  onSettingsChange 
 }: SandhyaSessionSettingsProps) {
   const [currentEditor, setCurrentEditor] = useState<string | null>(null);
   const [localSettings, setLocalSettings] = useState<SessionSettings>(sessionSettings);
@@ -37,18 +37,18 @@ function SandhyaSessionSettings({
   };
 
   const handleLocalSettingChange = (changes: Partial<SessionSettings>) => {
-    setLocalSettings((prev) => {
+    setLocalSettings(prev => {
       const newSettings = {
         ...prev,
-        ...changes,
+        ...changes
       };
-
+      
       // Recalculate duration using the existing calculator
       const duration = calculateTotalDuration(newSettings);
-
+      
       return {
         ...newSettings,
-        duration,
+        duration
       };
     });
   };
@@ -83,14 +83,26 @@ function SandhyaSessionSettings({
   ];
 
   // Create filtered options lists for both Ashtakshari and Panchakshari
-  const filteredAshtakshariOptions = japaCountOptions.filter((option) => parseInt(option.value) >= localSettings.gayatriCount);
+  const filteredAshtakshariOptions = japaCountOptions.filter(option => 
+    parseInt(option.value) >= localSettings.gayatriCount
+  );
 
-  const filteredPanchakshariOptions = japaCountOptions.filter((option) => parseInt(option.value) >= localSettings.ashtakshariCount);
+  const filteredPanchakshariOptions = japaCountOptions.filter(option => 
+    parseInt(option.value) >= localSettings.ashtakshariCount
+  );
 
   return (
     <>
-      <Sheet className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl" opened={opened} onBackdropClick={onClose}>
-        <Navbar centerTitle title="Settings" subtitle="Adjust your settings to your liking" />
+      <Sheet
+        className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl"
+        opened={opened}
+        onBackdropClick={onClose}
+      >
+        <Navbar
+          centerTitle
+          title="Settings"
+          subtitle="Adjust your settings to your liking"
+        />
 
         <List nested dividers outline>
           <ListItem
@@ -110,7 +122,7 @@ function SandhyaSessionSettings({
           <ListItem
             title="Language"
             after={localSettings.language}
-            link
+            link  
             onClick={() => setCurrentEditor('language')}
             media={<LanguageIcon className="text-primary-600" />}
           />
@@ -145,11 +157,18 @@ function SandhyaSessionSettings({
         </List>
 
         <Block className="!mt-4 text-center text-gray-500" strong>
-          Session Duration: <span className="font-bold text-lg text-primary-600">{formatTime(localSettings.duration)}</span> min
+          Session Duration: <span className="font-bold text-lg text-primary-600">
+            {formatTime(localSettings.duration)}
+          </span> min
         </Block>
 
         <Block className="!mt-4 !mb-4">
-          <Button large rounded onClick={handleDone} className="w-full bg-primary-600 hover:bg-primary-700">
+          <Button 
+            large
+            rounded
+            onClick={handleDone}
+            className="w-full bg-primary-600 hover:bg-primary-700"
+          >
             Done
           </Button>
         </Block>
@@ -163,8 +182,8 @@ function SandhyaSessionSettings({
         options={speedOptions}
         value={localSettings.chantingSpeed}
         onSelect={(value) => {
-          handleLocalSettingChange({
-            chantingSpeed: value as 'slow' | 'regular' | 'fast',
+          handleLocalSettingChange({ 
+            chantingSpeed: value as 'slow' | 'regular' | 'fast'
           });
           setCurrentEditor(null);
         }}
@@ -178,8 +197,8 @@ function SandhyaSessionSettings({
         options={learningModeOptions}
         value={localSettings.learningMode}
         onSelect={(value) => {
-          handleLocalSettingChange({
-            learningMode: value as 'repeat' | 'perform',
+          handleLocalSettingChange({ 
+            learningMode: value as 'repeat' | 'perform'
           });
           setCurrentEditor(null);
         }}
@@ -193,8 +212,8 @@ function SandhyaSessionSettings({
         options={languageOptions}
         value={localSettings.language}
         onSelect={(value) => {
-          handleLocalSettingChange({
-            language: value as 'english' | 'kannada',
+          handleLocalSettingChange({ 
+            language: value as 'english' | 'kannada'
           });
           setCurrentEditor(null);
         }}
@@ -208,8 +227,8 @@ function SandhyaSessionSettings({
         options={vocalPitchOptions}
         value={localSettings.vocalPitch}
         onSelect={(value) => {
-          handleLocalSettingChange({
-            vocalPitch: value as 'deep' | 'sharp',
+          handleLocalSettingChange({ 
+            vocalPitch: value as 'deep' | 'sharp'
           });
           setCurrentEditor(null);
         }}
@@ -225,20 +244,20 @@ function SandhyaSessionSettings({
         onSelect={(value: string | number) => {
           const newGayatriCount = parseInt(value.toString());
           const changes: Partial<SessionSettings> = {
-            gayatriCount: newGayatriCount,
+            gayatriCount: newGayatriCount
           };
-
+          
           // If Ashtakshari count becomes invalid, increase it
           if (localSettings.ashtakshariCount < newGayatriCount) {
             changes.ashtakshariCount = newGayatriCount;
-
+            
             // If Panchakshari count becomes invalid due to Ashtakshari adjustment,
             // increase it as well
             if (localSettings.panchakshariCount < newGayatriCount) {
               changes.panchakshariCount = newGayatriCount;
             }
           }
-
+          
           handleLocalSettingChange(changes);
           setCurrentEditor(null);
         }}
@@ -254,14 +273,14 @@ function SandhyaSessionSettings({
         onSelect={(value: string | number) => {
           const newAshtakshariCount = parseInt(value.toString());
           const changes: Partial<SessionSettings> = {
-            ashtakshariCount: newAshtakshariCount,
+            ashtakshariCount: newAshtakshariCount
           };
-
+          
           // If Panchakshari count becomes invalid, increase it
           if (localSettings.panchakshariCount < newAshtakshariCount) {
             changes.panchakshariCount = newAshtakshariCount;
           }
-
+          
           handleLocalSettingChange(changes);
           setCurrentEditor(null);
         }}
@@ -275,8 +294,8 @@ function SandhyaSessionSettings({
         options={filteredPanchakshariOptions}
         value={localSettings.panchakshariCount.toString()}
         onSelect={(value: string | number) => {
-          handleLocalSettingChange({
-            panchakshariCount: parseInt(value.toString()),
+          handleLocalSettingChange({ 
+            panchakshariCount: parseInt(value.toString())
           });
           setCurrentEditor(null);
         }}
@@ -285,4 +304,4 @@ function SandhyaSessionSettings({
   );
 }
 
-export default SandhyaSessionSettings;
+export default SandhyaSessionSettings; 

@@ -1,14 +1,27 @@
-import { Block, Button, Page, Navbar, Link, Radio, List, ListItem, Segmented, SegmentedButton, Toolbar } from 'konsta/react';
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { 
+  Block, 
+  Button, 
+  Page, 
+  Navbar, 
+  Link, 
+  Radio, 
+  List, 
+  ListItem,
+  Segmented,
+  SegmentedButton,
+  Toolbar
+} from "konsta/react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
-import { getLessonByCode } from '../data/mockLessons';
+import { getLessonByCode } from "../data/mockLessons";
 import { calculateTotalDuration, formatTime } from '../utils/durationCalculator';
+
 
 function ReviewSessionSetting() {
   const navigate = useNavigate();
-
+  
   // Initialize session settings state
   const [sessionSettings, setSessionSettings] = useState<SessionSettings>({
     sandhyaTime: 'pratah',
@@ -20,26 +33,32 @@ function ReviewSessionSetting() {
     vocalPitch: 'deep',
     duration: 0,
     language: 'english',
-    lessons: [],
+    lessons: []
   });
 
   // Function to build lessons array with current settings
   const buildLessonsArray = (settings: SessionSettings): Lesson[] => {
     const lessons: Lesson[] = [];
-
+    
     lessons.push(getLessonByCode('ACHAMANAM'));
     lessons.push(getLessonByCode('BHASMADHARANAM'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('SANKALPA_PRATAH') : getLessonByCode('SANKALPA_SAYAM'));
+    lessons.push(settings.sandhyaTime === 'pratah' ? 
+      getLessonByCode('SANKALPA_PRATAH') : 
+      getLessonByCode('SANKALPA_SAYAM')
+    );
     lessons.push(getLessonByCode('MARJANAM1'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('MARJANAM2_PRATAH') : getLessonByCode('MARJANAM2_SAYAM'));
+    lessons.push(settings.sandhyaTime === 'pratah' ? 
+      getLessonByCode('MARJANAM2_PRATAH') : 
+      getLessonByCode('MARJANAM2_SAYAM')
+    );
     lessons.push(getLessonByCode('MARJANAM3'));
-    lessons.push({ ...getLessonByCode('GAYATRI_JAPA'), loopCount: settings.gayatriCount });
-    // lessons.push(settings.learningMode === 'repeat' ?
-    //   getLessonByCode('PRANAYAMA_REPEAT') :
+    lessons.push({...getLessonByCode('GAYATRI_JAPA'), loopCount: settings.gayatriCount});
+    // lessons.push(settings.learningMode === 'repeat' ? 
+    //   getLessonByCode('PRANAYAMA_REPEAT') : 
     //   getLessonByCode('PRANAYAMA_PERFORM')
     // );
-    // lessons.push(settings.sandhyaTime === 'pratah' ?
-    //   getLessonByCode('ARGHYA_PRADANAM_PRATAH') :
+    // lessons.push(settings.sandhyaTime === 'pratah' ? 
+    //   getLessonByCode('ARGHYA_PRADANAM_PRATAH') : 
     //   getLessonByCode('ARGHYA_PRADANAM_SAYAM')
     // );
     // lessons.push(getLessonByCode('GAYATRI_SANKALPA'));
@@ -58,31 +77,37 @@ function ReviewSessionSetting() {
 
   // Update session settings and recalculate duration
   const updateSessionSettings = (updates: Partial<SessionSettings>) => {
-    setSessionSettings((prevSettings) => {
+    setSessionSettings(prevSettings => {
       const newSettings = { ...prevSettings, ...updates };
       const lessons = buildLessonsArray(newSettings);
       const estimatedDuration = calculateTotalDuration({ ...newSettings, lessons });
-
+      
       return {
         ...newSettings,
         lessons,
-        estimatedDuration,
+        estimatedDuration
       };
     });
   };
 
   // Setting update handlers
-  const setLearningMode = (mode: SessionSettings['learningMode']) => updateSessionSettings({ learningMode: mode });
-
-  const setChantingSpeed = (speed: SessionSettings['chantingSpeed']) => updateSessionSettings({ chantingSpeed: speed });
-
-  const setGayatriCount = (count: number) => updateSessionSettings({ gayatriCount: count });
-
-  const setAshtakshariCount = (count: number) => updateSessionSettings({ ashtakshariCount: count });
-
-  const setPanchakshariCount = (count: number) => updateSessionSettings({ panchakshariCount: count });
-
-  const setVocalPitch = (pitch: SessionSettings['vocalPitch']) => updateSessionSettings({ vocalPitch: pitch });
+  const setLearningMode = (mode: SessionSettings['learningMode']) => 
+    updateSessionSettings({ learningMode: mode });
+  
+  const setChantingSpeed = (speed: SessionSettings['chantingSpeed']) => 
+    updateSessionSettings({ chantingSpeed: speed });
+  
+  const setGayatriCount = (count: number) => 
+    updateSessionSettings({ gayatriCount: count });
+  
+  const setAshtakshariCount = (count: number) => 
+    updateSessionSettings({ ashtakshariCount: count });
+  
+  const setPanchakshariCount = (count: number) => 
+    updateSessionSettings({ panchakshariCount: count });
+  
+  const setVocalPitch = (pitch: SessionSettings['vocalPitch']) => 
+    updateSessionSettings({ vocalPitch: pitch });
 
   // Initialize lessons and duration
   useEffect(() => {
@@ -98,13 +123,9 @@ function ReviewSessionSetting() {
       <Navbar
         centerTitle
         title="Session Settings"
-        left={
-          <Link navbar onClick={() => navigate('/dashboard')}>
-            back
-          </Link>
-        }
+        left={<Link navbar onClick={() => navigate('/dashboard')}>back</Link>}
       />
-
+      
       {/* Scrollable content */}
       <Block className="flex-1 overflow-auto my-0">
         {/* Learning Mode */}
@@ -113,11 +134,21 @@ function ReviewSessionSetting() {
           <List>
             <ListItem
               title="Repeat Mode"
-              media={<Radio checked={sessionSettings.learningMode === 'repeat'} onChange={() => setLearningMode('repeat')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.learningMode === 'repeat'}
+                  onChange={() => setLearningMode('repeat')}
+                />
+              }
             />
             <ListItem
               title="Perform Mode"
-              media={<Radio checked={sessionSettings.learningMode === 'perform'} onChange={() => setLearningMode('perform')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.learningMode === 'perform'}
+                  onChange={() => setLearningMode('perform')}
+                />
+              }
             />
           </List>
         </Block>
@@ -128,15 +159,30 @@ function ReviewSessionSetting() {
           <List>
             <ListItem
               title="Slow Speed"
-              media={<Radio checked={sessionSettings.chantingSpeed === 'slow'} onChange={() => setChantingSpeed('slow')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.chantingSpeed === 'slow'}
+                  onChange={() => setChantingSpeed('slow')}
+                />
+              }
             />
             <ListItem
               title="Regular Speed"
-              media={<Radio checked={sessionSettings.chantingSpeed === 'regular'} onChange={() => setChantingSpeed('regular')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.chantingSpeed === 'regular'}
+                  onChange={() => setChantingSpeed('regular')}
+                />
+              }
             />
             <ListItem
               title="Fast Speed"
-              media={<Radio checked={sessionSettings.chantingSpeed === 'fast'} onChange={() => setChantingSpeed('fast')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.chantingSpeed === 'fast'}
+                  onChange={() => setChantingSpeed('fast')}
+                />
+              }
             />
           </List>
         </Block>
@@ -144,13 +190,17 @@ function ReviewSessionSetting() {
         {/* Chant Counts */}
         <Block strong inset className="space-y-4">
           <div className="text-lg font-semibold">Chant Counts</div>
-
+          
           {/* Gayatri Count */}
           <div className="space-y-2">
             <div className="font-medium">Gayatri</div>
             <Segmented>
               {[10, 28, 54, 108].map((count) => (
-                <SegmentedButton key={count} active={sessionSettings.gayatriCount === count} onClick={() => setGayatriCount(count)}>
+                <SegmentedButton
+                  key={count}
+                  active={sessionSettings.gayatriCount === count}
+                  onClick={() => setGayatriCount(count)}
+                >
                   {count}
                 </SegmentedButton>
               ))}
@@ -196,11 +246,21 @@ function ReviewSessionSetting() {
           <List>
             <ListItem
               title="Deep Voice (Adult Male)"
-              media={<Radio checked={sessionSettings.vocalPitch === 'deep'} onChange={() => setVocalPitch('deep')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.vocalPitch === 'deep'}
+                  onChange={() => setVocalPitch('deep')}
+                />
+              }
             />
             <ListItem
               title="Sharp Voice (Non Adult Male)"
-              media={<Radio checked={sessionSettings.vocalPitch === 'sharp'} onChange={() => setVocalPitch('sharp')} />}
+              media={
+                <Radio
+                  checked={sessionSettings.vocalPitch === 'sharp'}
+                  onChange={() => setVocalPitch('sharp')}
+                />
+              }
             />
           </List>
         </Block>
@@ -219,4 +279,4 @@ function ReviewSessionSetting() {
   );
 }
 
-export default ReviewSessionSetting;
+export default ReviewSessionSetting; 

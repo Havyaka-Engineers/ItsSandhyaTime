@@ -11,4 +11,4 @@ export type SessionSettings = {
   language: 'english' | 'kannada';
   duration: number;
   lessons: Lesson[];
-};
+}; 

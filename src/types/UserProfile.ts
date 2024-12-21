@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from "firebase/firestore";
 
 export type Language = 'english' | 'kannada' | 'sanskrit';
 export type VocalPitch = 'deep' | 'sharp';
@@ -16,4 +16,4 @@ export interface UserProfile {
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
   lastLoginAt?: Timestamp;
-}
+} 
