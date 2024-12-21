@@ -1,5 +1,5 @@
-import { Block } from "konsta/react";
-import GoogleSignInButton from "../components/GoogleSignInButton";
+import { Block } from 'konsta/react';
+import GoogleSignInButton from '../components/GoogleSignInButton';
 
 function SignIn() {
   return (
@@ -9,7 +9,7 @@ function SignIn() {
       </Block>
       <GoogleSignInButton />
     </Block>
-  )
+  );
 }
 
 export default SignIn;
