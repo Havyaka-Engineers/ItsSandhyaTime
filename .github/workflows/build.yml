@@ -24,8 +24,8 @@ jobs:
 
       - name: Build for dev
         if: github.ref == 'refs/heads/dev'
-        run: npm run build:dev
+        run: firebase target:apply hosting dev its-sandhya-time-dev && npm run build:dev
 
       - name: Build for production
         if: github.ref == 'refs/heads/main'
-        run: npm run build:prod
+        run: firebase target:apply hosting prod its-sandhya-time && npm run build:prod
