@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
 import { UserPreferences, VocalPitch } from '../types/UserProfile';
-import backgroundPattern from "../assets/react.svg";
+import backgroundPattern from "../assets/background-pattern.svg";
 import { gotras } from '../types/gotra';
 
 function UserSettings() {
