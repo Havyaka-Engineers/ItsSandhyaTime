@@ -4,18 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
 import { UserPreferences, VocalPitch } from '../types/UserProfile';
-import group from "../assets/Group.svg";
-
-const gotras = [
-  "Kashyapa",
-  "Angirasa",
-  "Vasishta",
-  "Vishwamitra",
-  "Bharadwaja",
-  "Goutama",
-  "Angeerasa",
-  "Jamadagni",
-];
+import backgroundPattern from "../assets/react.svg";
+import { gotras } from '../types/gotra';
 
 function UserSettings() {
   const navigate = useNavigate();
@@ -78,7 +68,7 @@ function UserSettings() {
       className="w-full h-full max-w-lg relative"
       style={{
         background: "#532C16",
-        backgroundImage: `url(${group})`,
+        backgroundImage: `url(${backgroundPattern})`,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundSize: "cover",
