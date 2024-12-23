@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
 import { UserPreferences, VocalPitch } from '../types/UserProfile';
+import backgroundPattern from "../assets/background-pattern.svg";
+import { gotras } from '../types/gotra';
 
 function UserSettings() {
   const navigate = useNavigate();
@@ -61,6 +63,25 @@ function UserSettings() {
   };
 
   return (
+    <div className="fixed inset-0 flex items-center justify-center">
+    <div
+      className="w-full h-full max-w-lg relative"
+      style={{
+        background: "#532C16",
+        backgroundImage: `url(${backgroundPattern})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        position: "relative",
+      }}
+    >
+          <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "rgba(83, 44, 22, 0.8)", 
+          }}
+        ></div>
     <Block>
       <List strongIos insetIos>
         <ListInput label="Email" type="email" value={profile.email} disabled readOnly />
@@ -87,11 +108,13 @@ function UserSettings() {
               gotra: e.target.value,
             }))
           }
+          className="bg-white text-black rounded-lg shadow-md border border-gray-300"
         >
-          <option value="Kashyapa">Kashyapa</option>
-          <option value="Angirasa">Angirasa</option>
-          <option value="Vasishta">Vasishta</option>
-          <option value="Vishwamitra">Vishwamitra</option>
+          {gotras.map((gotra) => (
+            <option key={gotra} value={gotra} className="text-black bg-white">
+              {gotra}
+            </option>
+          ))}
         </ListInput>
 
         <Block strong inset>
@@ -147,6 +170,8 @@ function UserSettings() {
         </Button>
       </Block>
     </Block>
+    </div>
+    </div>
   );
 }
 
