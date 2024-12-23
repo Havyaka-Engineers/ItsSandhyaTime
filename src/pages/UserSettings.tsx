@@ -20,8 +20,8 @@ function UserSettings() {
     gotra: 'Kashyapa',
     preferences: {
       language: 'english',
-      vocalPitch: 'deep'
-    }
+      vocalPitch: 'deep',
+    },
   });
 
   useEffect(() => {
@@ -30,19 +30,19 @@ function UserSettings() {
       if (!userId) return;
 
       // Set email from auth
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
         email: auth.currentUser?.email || '',
-        fullName: auth.currentUser?.displayName || ''
+        fullName: auth.currentUser?.displayName || '',
       }));
 
       const userProfile = await userService.getUserProfile(userId);
       if (userProfile) {
-        setProfile(prev => ({
+        setProfile((prev) => ({
           ...prev,
           fullName: userProfile.fullName,
           gotra: userProfile.gotra,
-          preferences: userProfile.preferences
+          preferences: userProfile.preferences,
         }));
       }
     };
@@ -84,22 +84,18 @@ function UserSettings() {
         ></div>
     <Block>
       <List strongIos insetIos>
-        <ListInput
-          label="Email"
-          type="email"
-          value={profile.email}
-          disabled
-          readOnly
-        />
-        
+        <ListInput label="Email" type="email" value={profile.email} disabled readOnly />
+
         <ListInput
           label="Full Name"
           type="text"
           value={profile.fullName}
-          onChange={(e) => setProfile(prev => ({
-            ...prev,
-            fullName: e.target.value
-          }))}
+          onChange={(e) =>
+            setProfile((prev) => ({
+              ...prev,
+              fullName: e.target.value,
+            }))
+          }
         />
 
         <ListInput
@@ -132,13 +128,15 @@ function UserSettings() {
                   component="div"
                   value="deep"
                   checked={profile.preferences.vocalPitch === 'deep'}
-                  onChange={() => setProfile(prev => ({
-                    ...prev,
-                    preferences: {
-                      ...prev.preferences,
-                      vocalPitch: 'deep' as VocalPitch
-                    }
-                  }))}
+                  onChange={() =>
+                    setProfile((prev) => ({
+                      ...prev,
+                      preferences: {
+                        ...prev.preferences,
+                        vocalPitch: 'deep' as VocalPitch,
+                      },
+                    }))
+                  }
                 />
               }
             />
@@ -150,13 +148,15 @@ function UserSettings() {
                   component="div"
                   value="sharp"
                   checked={profile.preferences.vocalPitch === 'sharp'}
-                  onChange={() => setProfile(prev => ({
-                    ...prev,
-                    preferences: {
-                      ...prev.preferences,
-                      vocalPitch: 'sharp' as VocalPitch
-                    }
-                  }))}
+                  onChange={() =>
+                    setProfile((prev) => ({
+                      ...prev,
+                      preferences: {
+                        ...prev.preferences,
+                        vocalPitch: 'sharp' as VocalPitch,
+                      },
+                    }))
+                  }
                 />
               }
             />
@@ -165,7 +165,9 @@ function UserSettings() {
       </List>
 
       <Block className="p-4">
-        <Button large onClick={handleSave}>Save Settings</Button>
+        <Button large onClick={handleSave}>
+          Save Settings
+        </Button>
       </Block>
     </Block>
     </div>
@@ -173,4 +175,4 @@ function UserSettings() {
   );
 }
 
-export default UserSettings; 
+export default UserSettings;
