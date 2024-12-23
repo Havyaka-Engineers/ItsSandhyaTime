@@ -26,3 +26,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ITS_SANDHYA_TIME }}
           channelId: live
           projectId: its-sandhya-time
+          target: prod
