@@ -29,3 +29,5 @@ package-lock.json
 # firebase
 .firebase
 firebase.config.prod.ts
+.env
+firebase.config.dev.ts
