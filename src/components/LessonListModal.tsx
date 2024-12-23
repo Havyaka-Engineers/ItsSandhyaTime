@@ -9,16 +9,8 @@ interface LessonListModalProps {
 
 const LessonListModal: React.FC<LessonListModalProps> = ({ opened, onClose, lessons }) => {
   return (
-    <Sheet
-      className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl"
-      opened={opened}
-      onBackdropClick={onClose}
-    >
-      <Navbar
-        centerTitle
-        title="Lesson List"
-        subtitle="Your session lessons"
-      />
+    <Sheet className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl" opened={opened} onBackdropClick={onClose}>
+      <Navbar centerTitle title="Lesson List" subtitle="Your session lessons" />
 
       <Block className="space-y-2">
         {lessons.map((lesson, index) => (
@@ -32,4 +24,4 @@ const LessonListModal: React.FC<LessonListModalProps> = ({ opened, onClose, less
   );
 };
 
-export default LessonListModal; 
+export default LessonListModal;
