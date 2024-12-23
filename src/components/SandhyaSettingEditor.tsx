@@ -1,4 +1,4 @@
-import { Sheet, List, ListItem, Navbar } from "konsta/react";
+import { Sheet, List, ListItem, Navbar } from 'konsta/react';
 
 interface SettingOption {
   value: string | number;
@@ -15,26 +15,10 @@ interface SandhyaSettingEditorProps {
   onSelect: (value: string | number) => void;
 }
 
-function SandhyaSettingEditor({ 
-  opened, 
-  onClose, 
-  title, 
-  subtitle, 
-  options, 
-  value, 
-  onSelect 
-}: SandhyaSettingEditorProps) {
+function SandhyaSettingEditor({ opened, onClose, title, subtitle, options, value, onSelect }: SandhyaSettingEditorProps) {
   return (
-    <Sheet
-      className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl"
-      opened={opened}
-      onBackdropClick={onClose}
-    >
-      <Navbar
-        centerTitle
-        title={title}
-        subtitle={subtitle}
-      />
+    <Sheet className="pb-safe !w-[calc(100%-16px)] mx-2 rounded-t-xl" opened={opened} onBackdropClick={onClose}>
+      <Navbar centerTitle title={title} subtitle={subtitle} />
 
       <List nested dividers outline>
         {options.map((option) => (
@@ -45,7 +29,7 @@ function SandhyaSettingEditor({
               onSelect(option.value);
               onClose();
             }}
-            after={value === option.value ? "✓" : undefined}
+            after={value === option.value ? '✓' : undefined}
           />
         ))}
       </List>
@@ -53,4 +37,4 @@ function SandhyaSettingEditor({
   );
 }
 
-export default SandhyaSettingEditor; 
+export default SandhyaSettingEditor;
