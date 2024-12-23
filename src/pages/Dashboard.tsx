@@ -5,9 +5,12 @@ import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
 import { getLessonByCode } from '../data/mockLessons';
 import { calculateTotalDuration } from '../utils/durationCalculator';
+import { useEffect, useState } from 'react';
+import PermissionDialog from '../components/PermissionDialog';
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [showPermissionDialog, setShowPermissionDialog] = useState(false);
 
   // Initialize session settings state
   let sessionSettings: SessionSettings = {
@@ -71,8 +74,73 @@ function Dashboard() {
     navigate('/sandhya-session', { state: { sessionSettings } });
   };
 
+  useEffect(() => {
+    const checkPermissions = () => {
+      const notificationPermission = localStorage.getItem('notificationPermission');
+      const locationPermission = localStorage.getItem('locationPermission');
+      const lastRequestedAt = localStorage.getItem('permissionsLastRequestedAt');
+
+      // If both permissions are granted, don't show dialog
+      if (notificationPermission === 'granted' && locationPermission === 'granted') {
+        return;
+      }
+
+      // If permissions were never requested, show dialog
+      if (!lastRequestedAt) {
+        setShowPermissionDialog(true);
+        return;
+      }
+
+      // Check if a week has passed since last request
+      const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+      const lastRequested = new Date(lastRequestedAt).getTime();
+      const now = new Date().getTime();
+
+      if (now - lastRequested > oneWeek) {
+        setShowPermissionDialog(true);
+      }
+    };
+
+    checkPermissions();
+  }, []);
+
+  const requestPermissions = async () => {
+    try {
+      // Request notifications permission
+      const notificationResult = await Notification.requestPermission();
+      localStorage.setItem('notificationPermission', notificationResult);
+
+      // Request location permission
+      try {
+        await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        localStorage.setItem('locationPermission', 'granted');
+      } catch (error) {
+        console.log('Location permission denied or error:', error);
+        localStorage.setItem('locationPermission', 'denied');
+      }
+
+      // Store the timestamp of when permissions were requested
+      localStorage.setItem('permissionsLastRequestedAt', new Date().toISOString());
+    } catch (error) {
+      console.error('Error requesting permissions:', error);
+    }
+  };
+
+  const handlePermissionAccept = () => {
+    setShowPermissionDialog(false);
+    requestPermissions();
+  };
+
+  const handlePermissionClose = () => {
+    setShowPermissionDialog(false);
+    localStorage.setItem('permissionsLastRequestedAt', new Date().toISOString());
+  };
+
   return (
     <Block>
+      <PermissionDialog isOpen={showPermissionDialog} onClose={handlePermissionClose} onAccept={handlePermissionAccept} />
       <p>Dashboard Page!</p>
       <Block className="space-y-4">
         {/* <Button onClick={handleLearnNowClick}>Learn Now!</Button> */}
