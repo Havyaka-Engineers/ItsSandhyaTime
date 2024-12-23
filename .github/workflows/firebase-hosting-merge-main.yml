@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run typecheck && npm run build
+      - run: npm install && npm run typecheck && npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.PROD_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.PROD_FIREBASE_AUTH_DOMAIN }}
