@@ -15,8 +15,8 @@ function Dashboard() {
   // Initialize session settings state
   let sessionSettings: SessionSettings = {
     sandhyaTime: 'pratah',
-    learningMode: 'repeat',
-    chantingSpeed: 'slow',
+    learningMode: 'perform',
+    chantingSpeed: 'fast',
     gayatriCount: 10,
     ashtakshariCount: 28,
     panchakshariCount: 54,
@@ -71,7 +71,7 @@ function Dashboard() {
   // };
 
   const handleSandhyaSessionClick = () => {
-    navigate('/sandhya-session', { state: { sessionSettings } });
+    navigate('/player', { state: { sessionSettings } });
   };
 
   useEffect(() => {
