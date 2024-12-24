@@ -14,8 +14,8 @@ const SplashScreen = () => {
         </div> */}
         </div>
         <div className="absolute bottom-4 w-full flex justify-center">
-          <div className="flex item-center justify-center h-8 w-15 rounded-br-lg rounded-tl-lg bg-[#BB5F2A] ">
-            <p className="text-white font-bold text-center p-2">Lite</p>
+          <div className="flex item-center justify-center h-7 w-15 rounded-br-lg rounded-tl-lg bg-[#BB5F2A] ">
+            <p className="text-white font-bold text-center p-1">Lite</p>
           </div>
         </div>
       </div>
