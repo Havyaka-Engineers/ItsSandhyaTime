@@ -8,7 +8,7 @@ const SplashScreen = () => {
     >
       <div className="flex flex-col justify-center items-center w-full h-full ">
         <div className="text-center">
-          <img src="/public/app_icon.png" alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
+          <img src="/app_icon.png" alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
           {/* <div className="animate-pulse text-white text-xl">
           Loading...
         </div> */}
