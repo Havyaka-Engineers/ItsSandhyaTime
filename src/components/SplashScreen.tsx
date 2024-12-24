@@ -1,14 +1,14 @@
-// import { Block } from 'konsta/react';
 import backgroundImage from '../assets/background-pattern.svg';
+import appIcon from '../../public/app_icon.png';
 const SplashScreen = () => {
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-[#532C16] bg-cover bg-center"
       style={{ backgroundImage: `linear-gradient(rgba(83, 44, 22, 0.8),rgba(83, 44, 22, 0.8)),url(${backgroundImage})` }}
     >
-      <div className="flex flex-col justify-center items-center h-full w-full">
+      <div className="flex flex-col justify-center items-center h-full w-full max-w-lg">
         <div className="text-center">
-          <img src="/app_icon.png" alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
+          <img src={appIcon} alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
           {/* <div className="animate-pulse text-white text-xl">
           Loading...
         </div> */}
