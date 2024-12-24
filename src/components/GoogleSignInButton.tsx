@@ -41,9 +41,11 @@ function GoogleSignInButton() {
         <Button
           large
           onClick={signInWithGoogle}
-          className="flex justify-center items-center bg-transparent p-0 border-none cursor-pointer"
+          className="flex justify-center items-center p-0 border-none cursor-pointer "
+          style={{ height: '60px', background: '#B43403' }}
         >
-          <img src="/android_neutral_rd_ctn@1x.png" alt="Sign In with Google" className="w-full h-auto" />
+          {/* <img src="/android_neutral_rd_ctn@1x.png" alt="Sign In with Google" className="w-full h-auto" /> */}
+          <p className="text-xl"> Continue with google</p>
         </Button>
       )}
     </Block>
