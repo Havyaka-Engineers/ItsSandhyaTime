@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
 import { UserPreferences, VocalPitch } from '../types/UserProfile';
-import backgroundPattern from '../assets/background-pattern.svg';
+import backgroundPattern2 from '../assets/background-pattern-2.svg';
+import sandhyaTimeLogo from '../assets/SandhyaTime-Logo.svg';
 import { gotras } from '../types/gotra';
 
 function UserSettings() {
@@ -68,21 +69,17 @@ function UserSettings() {
         className="w-full h-full max-w-lg relative"
         style={{
           background: '#532C16',
-          backgroundImage: `url(${backgroundPattern})`,
+          backgroundImage: `url(${backgroundPattern2})`,
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
-          backgroundSize: 'cover',
           position: 'relative',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: 'rgba(83, 44, 22, 0.8)',
-          }}
-        ></div>
-        <Block>
+        {/* Logo Section */}
+        <div className="flex justify-center items-center mt-4 relative z-10">
+          <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-32 h-auto" />
+        </div>
+        <Block className="relative z-10">
           <List strongIos insetIos>
             <ListInput label="Email" type="email" value={profile.email} disabled readOnly />
 
