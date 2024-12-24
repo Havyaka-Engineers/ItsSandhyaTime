@@ -20,12 +20,6 @@ type SunTimes = {
   sunset: string;
 };
 
-type PanchangDetails = {
-  tithi: string;
-  nakshatra: string;
-  weekday: string;
-};
-
 // Function to get user's location using Geolocation API
 const getUserLocation = async (): Promise<Location> => {
   return new Promise((resolve, reject) => {
