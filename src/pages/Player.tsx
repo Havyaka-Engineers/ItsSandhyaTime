@@ -49,7 +49,13 @@ function Player() {
 
   return (
     <Page className="h-screen flex flex-col bg-gray-100">
-      <PlayerTopBar currentLessonIndex={state.context.currentLessonIndex} totalLessons={state.context.lessons.length} />
+      <PlayerTopBar
+        currentLessonIndex={state.context.currentLessonIndex}
+        totalLessons={state.context.lessons.length}
+        timeElapsed={state.context.timeElapsed}
+        sessionDuration={state.context.sessionDuration}
+        lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
+      />
 
       {/* Video Container - Using 9:16 aspect ratio */}
       <div className="flex-1 flex items-center justify-center bg-gray-900">
