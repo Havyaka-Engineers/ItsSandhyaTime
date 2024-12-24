@@ -4,7 +4,7 @@ const SplashScreen = () => {
   return (
     <Block
       className="fixed inset-0 flex items-center justify-center bg-[#532C16] bg-cover bg-center"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      style={{ backgroundImage: `linear-gradient(rgba(83, 44, 22, 0.8),rgba(83, 44, 22, 0.8)),url(${backgroundImage})` }}
     >
       <div className="flex flex-col justify-center items-center w-full h-full ">
         <div className="text-center">
