@@ -1,5 +1,6 @@
 # ItsSandhyaTime
 An app to celebrate the divine significance of the "Sandhya times". Sandhya is a time for deep contemplation that can uplift our health, intellect and spirits.
+ItsSandhyaTime.in
 
 ## Initial Setup
 Here are the streamlined steps to deploy to the Firebase development environment:
