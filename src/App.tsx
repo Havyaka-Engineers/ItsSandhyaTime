@@ -45,6 +45,21 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker Registered', registration);
+        })
+        .catch((error) => {
+          console.error('Service Worker Registration Failed:', error);
+        });
+    } else {
+      console.warn('Service Worker not supported in this browser.');
+    }
+  }, []);
+
   if (showSplash || loading) {
     return (
       <KonstaApp theme="material" dark>
