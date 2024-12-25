@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Block } from 'konsta/react';
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
-import { getLessonByCode } from '../data/mockLessons';
+import { VISHNU_SMARANA } from '../data/lessons/VISHNU_SMARANA';
 import { calculateTotalDuration } from '../utils/durationCalculator';
 import PermissionDialog from '../components/PermissionDialog';
 import logo from '../assets/SandhyaTime-Logo.svg';
@@ -184,50 +184,28 @@ const Dashboard: React.FC = () => {
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
 
-  // Initialize session settings state
+  // Initialize session settings
   let sessionSettings: SessionSettings = {
     sandhyaTime: 'pratah',
-    learningMode: 'repeat',
+    learningMode: 'perform',
     chantingSpeed: 'slow',
-    gayatriCount: 10,
-    ashtakshariCount: 28,
-    panchakshariCount: 54,
     vocalPitch: 'deep',
     language: 'english',
     duration: 0,
     lessons: [],
+    loops: {
+      gayatriCount: 10,
+      ashtakshariCount: 28,
+      panchakshariCount: 54,
+      pranayamaCount: 3,
+    },
   };
 
   // Function to build lessons array with current settings
   const buildLessonsArray = (settings: SessionSettings): Lesson[] => {
+    console.log('settings', settings);
     const lessons: Lesson[] = [];
-
-    lessons.push(getLessonByCode('ACHAMANAM'));
-    lessons.push(getLessonByCode('BHASMADHARANAM'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('SANKALPA_PRATAH') : getLessonByCode('SANKALPA_SAYAM'));
-    lessons.push(getLessonByCode('MARJANAM1'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('MARJANAM2_PRATAH') : getLessonByCode('MARJANAM2_SAYAM'));
-    lessons.push(getLessonByCode('MARJANAM3'));
-    lessons.push({ ...getLessonByCode('GAYATRI_JAPA'), loopCount: settings.gayatriCount });
-    // lessons.push(settings.learningMode === 'repeat' ?
-    //   getLessonByCode('PRANAYAMA_REPEAT') :
-    //   getLessonByCode('PRANAYAMA_PERFORM')
-    // );
-    // lessons.push(settings.sandhyaTime === 'pratah' ?
-    //   getLessonByCode('ARGHYA_PRADANAM_PRATAH') :
-    //   getLessonByCode('ARGHYA_PRADANAM_SAYAM')
-    // );
-    // lessons.push(getLessonByCode('GAYATRI_SANKALPA'));
-    // lessons.push({...getLessonByCode('GAYATRI_JAPA'), loopCount: settings.gayatriCount});
-    // lessons.push(getLessonByCode('SANDHYA_UPASTHANAM'));
-    // lessons.push(getLessonByCode('GOTRA_PRAVARA'));
-    // lessons.push(getLessonByCode('GAYATRI_JAPA_SAMARPANAM'));
-    // lessons.push(getLessonByCode('ASHTAKSHARI_PANCHAKSHARI_SANKALPA'));
-    // lessons.push({...getLessonByCode('ASHTAKSHARI_JAPA'), loopCount: settings.ashtakshariCount});
-    // lessons.push({...getLessonByCode('PANCHAKSHARI_JAPA'), loopCount: settings.panchakshariCount});
-    // lessons.push(getLessonByCode('ASHTAKSHARI_PANCHAKSHARI_JAPA_SAMARPANAM'));
-    // lessons.push(getLessonByCode('PRAYASCHITTA'));
-
+    lessons.push(VISHNU_SMARANA);
     return lessons;
   };
 
@@ -243,11 +221,10 @@ const Dashboard: React.FC = () => {
   // };
 
   const handleSandhyaSessionClick = () => {
-    // Show a notification when starting the session
     showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
       type: 'session_start',
     });
-    navigate('/sandhya-session', { state: { sessionSettings } });
+    navigate('/player', { state: { sessionSettings } });
   };
 
   // Function to fetch location and sunrise/sunset data
