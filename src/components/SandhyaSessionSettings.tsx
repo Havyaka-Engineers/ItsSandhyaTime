@@ -83,9 +83,13 @@ function SandhyaSessionSettings({
   ];
 
   // Create filtered options lists for both Ashtakshari and Panchakshari
-  const filteredAshtakshariOptions = japaCountOptions.filter((option) => parseInt(option.value) >= localSettings.gayatriCount);
+  const filteredAshtakshariOptions = japaCountOptions.filter(
+    (option) => parseInt(option.value) >= localSettings.loops.gayatriCount,
+  );
 
-  const filteredPanchakshariOptions = japaCountOptions.filter((option) => parseInt(option.value) >= localSettings.ashtakshariCount);
+  const filteredPanchakshariOptions = japaCountOptions.filter(
+    (option) => parseInt(option.value) >= localSettings.loops.ashtakshariCount,
+  );
 
   return (
     <>
@@ -123,21 +127,21 @@ function SandhyaSessionSettings({
           />
           <ListItem
             title="Gayatri Japa Count"
-            after={`${localSettings.gayatriCount}`}
+            after={`${localSettings.loops.gayatriCount}`}
             link
             onClick={() => setCurrentEditor('gayatri')}
             media={<CountIcon className="text-primary-600" />}
           />
           <ListItem
             title="Ashtakshari Japa Count"
-            after={`${localSettings.ashtakshariCount}`}
+            after={`${localSettings.loops.ashtakshariCount}`}
             link
             onClick={() => setCurrentEditor('ashtakshari')}
             media={<CountIcon className="text-primary-600" />}
           />
           <ListItem
             title="Panchakshari Japa Count"
-            after={`${localSettings.panchakshariCount}`}
+            after={`${localSettings.loops.panchakshariCount}`}
             link
             onClick={() => setCurrentEditor('panchakshari')}
             media={<CountIcon className="text-primary-600" />}
@@ -221,23 +225,19 @@ function SandhyaSessionSettings({
         title="Gayatri Japa Count"
         subtitle="Select number of repetitions"
         options={japaCountOptions}
-        value={localSettings.gayatriCount.toString()}
+        value={localSettings.loops.gayatriCount.toString()}
         onSelect={(value: string | number) => {
           const newGayatriCount = parseInt(value.toString());
           const changes: Partial<SessionSettings> = {
-            gayatriCount: newGayatriCount,
+            loops: {
+              ...localSettings.loops,
+              gayatriCount: newGayatriCount,
+              ashtakshariCount:
+                localSettings.loops.ashtakshariCount < newGayatriCount ? newGayatriCount : localSettings.loops.ashtakshariCount,
+              panchakshariCount:
+                localSettings.loops.panchakshariCount < newGayatriCount ? newGayatriCount : localSettings.loops.panchakshariCount,
+            },
           };
-
-          // If Ashtakshari count becomes invalid, increase it
-          if (localSettings.ashtakshariCount < newGayatriCount) {
-            changes.ashtakshariCount = newGayatriCount;
-
-            // If Panchakshari count becomes invalid due to Ashtakshari adjustment,
-            // increase it as well
-            if (localSettings.panchakshariCount < newGayatriCount) {
-              changes.panchakshariCount = newGayatriCount;
-            }
-          }
 
           handleLocalSettingChange(changes);
           setCurrentEditor(null);
@@ -250,17 +250,19 @@ function SandhyaSessionSettings({
         title="Ashtakshari Japa Count"
         subtitle="Select number of repetitions"
         options={filteredAshtakshariOptions}
-        value={localSettings.ashtakshariCount.toString()}
+        value={localSettings.loops.ashtakshariCount.toString()}
         onSelect={(value: string | number) => {
           const newAshtakshariCount = parseInt(value.toString());
           const changes: Partial<SessionSettings> = {
-            ashtakshariCount: newAshtakshariCount,
+            loops: {
+              ...localSettings.loops,
+              ashtakshariCount: newAshtakshariCount,
+              panchakshariCount:
+                localSettings.loops.panchakshariCount < newAshtakshariCount
+                  ? newAshtakshariCount
+                  : localSettings.loops.panchakshariCount,
+            },
           };
-
-          // If Panchakshari count becomes invalid, increase it
-          if (localSettings.panchakshariCount < newAshtakshariCount) {
-            changes.panchakshariCount = newAshtakshariCount;
-          }
 
           handleLocalSettingChange(changes);
           setCurrentEditor(null);
@@ -273,10 +275,13 @@ function SandhyaSessionSettings({
         title="Panchakshari Japa Count"
         subtitle="Select number of repetitions"
         options={filteredPanchakshariOptions}
-        value={localSettings.panchakshariCount.toString()}
+        value={localSettings.loops.panchakshariCount.toString()}
         onSelect={(value: string | number) => {
           handleLocalSettingChange({
-            panchakshariCount: parseInt(value.toString()),
+            loops: {
+              ...localSettings.loops,
+              panchakshariCount: parseInt(value.toString()),
+            },
           });
           setCurrentEditor(null);
         }}
