@@ -186,6 +186,17 @@ const Dashboard: React.FC = () => {
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  const [redirect, setRedirect] = useState(true); // State to control redirection
+
+  useEffect(() => {
+    if (redirect) {
+      navigate('/landing'); // Redirect to Landing page
+    }
+  }, [redirect, navigate]);
+
+  if (redirect) {
+    return null; // Render nothing while redirecting
+  }
 
   // Initialize session settings
   let sessionSettings: SessionSettings = {
