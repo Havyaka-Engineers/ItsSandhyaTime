@@ -12,7 +12,7 @@ export const SandhyaPlayerMachine = setup({
       mode: 'repeat' | 'perform';
       currentStepIndex: number;
       currentStepPlayCount: number;
-      currentLessonLoopCount: number;
+      // currentLessonLoopCount: number;
       chantingSpeed: SessionSettings['chantingSpeed'];
       sessionDuration: number;
       timeRemaining: number;
@@ -88,7 +88,7 @@ export const SandhyaPlayerMachine = setup({
               controls: false,
               playsinline: true,
               responsive: true,
-              loop: event.loopCount > 1,
+              loop: false,
             });
 
             isInitialPlay = true;
@@ -186,20 +186,26 @@ export const SandhyaPlayerMachine = setup({
     hasPreviousLesson: (context) => {
       return context.context.currentLessonIndex > 0;
     },
+    isInstructionStep: (context) => {
+      return (
+        context.context.lessons[context.context.currentLessonIndex].steps[context.context.currentStepIndex].stepType ===
+        'instruction'
+      );
+    },
     isPerformMode: (context) => {
-      return context.context.mode === 'perform' || context.context.lessons[context.context.currentLessonIndex].isLoopedLesson;
+      return context.context.mode === 'perform';
     },
     isFirstRepeatPlay: (context) => {
       return (
         context.context.mode === 'repeat' &&
-        !context.context.lessons[context.context.currentLessonIndex].isLoopedLesson &&
+        // !context.context.lessons[context.context.currentLessonIndex].isLoopedLesson &&
         context.context.currentStepPlayCount + 1 < 2
       );
     },
     isSecondRepeatPlay: (context) => {
       return (
         context.context.mode === 'repeat' &&
-        !context.context.lessons[context.context.currentLessonIndex].isLoopedLesson &&
+        // !context.context.lessons[context.context.currentLessonIndex].isLoopedLesson &&
         context.context.currentStepPlayCount + 1 === 2
       );
     },
@@ -211,7 +217,9 @@ export const SandhyaPlayerMachine = setup({
       return context.context.currentStepIndex > 0;
     },
     hasRemainingLoops: (context) => {
-      return context.context.currentLessonLoopCount < context.context.lessons[context.context.currentLessonIndex].loopCount - 1;
+      console.log(context.context.lessons[context.context.currentLessonIndex]);
+      return false;
+      // return context.context.currentLessonLoopCount < context.context.lessons[context.context.currentLessonIndex].loopCount - 1;
     },
   },
   actions: {
@@ -222,15 +230,18 @@ export const SandhyaPlayerMachine = setup({
         // Calculate duration of fully completed lessons
         const completedLessonsDuration = context.lessons.slice(0, context.currentLessonIndex).reduce((acc, lesson) => {
           // For looped lessons, multiply duration by loopCount
-          if (lesson.isLoopedLesson) {
-            return acc + lesson.duration * lesson.loopCount;
-          }
-          // For regular lessons in repeat mode, multiply by 2 (each step is played twice)
-          else if (context.mode === 'repeat') {
-            return acc + lesson.duration * 2;
-          }
-          // For regular lessons in perform mode, just add the duration
-          return acc + lesson.duration;
+          // if (lesson.isLoopedLesson) {
+          //   return acc + lesson.duration * lesson.loopCount;
+          // }
+          // // For regular lessons in repeat mode, multiply by 2 (each step is played twice)
+          // else if (context.mode === 'repeat') {
+          //   return acc + lesson.duration * 2;
+          // }
+          // // For regular lessons in perform mode, just add the duration
+          // return acc + lesson.duration;
+          console.log('lesson', lesson);
+          console.log('acc', acc);
+          return 0;
         }, 0);
 
         console.log('completedLessonsDuration:', completedLessonsDuration, context.currentLessonIndex);
@@ -293,7 +304,7 @@ export const SandhyaPlayerMachine = setup({
     mode: input.sessionSettings.learningMode,
     currentStepIndex: 0,
     currentStepPlayCount: 0,
-    currentLessonLoopCount: 0,
+    // currentLessonLoopCount: 0,
     chantingSpeed: input.sessionSettings.chantingSpeed,
     sessionDuration: input.sessionSettings.duration,
     timeRemaining: input.sessionSettings.duration || 0,
@@ -342,7 +353,7 @@ export const SandhyaPlayerMachine = setup({
         assign({
           currentStepIndex: 0,
           currentStepPlayCount: 0,
-          currentLessonLoopCount: 0,
+          // currentLessonLoopCount: 0,
         }),
         sendTo('vimeoPlayerActor', ({ context }) => {
           // Calculate playback speed based on chanting speed
@@ -363,7 +374,7 @@ export const SandhyaPlayerMachine = setup({
             type: 'LOAD_VIDEO',
             videoId: context.lessons[context.currentLessonIndex].videoId,
             steps: context.lessons[context.currentLessonIndex].steps,
-            loopCount: context.lessons[context.currentLessonIndex].loopCount,
+            //loopCount: context.lessons[context.currentLessonIndex].loopCount,
             playbackSpeed,
           };
         }),
@@ -428,6 +439,21 @@ export const SandhyaPlayerMachine = setup({
           guard: 'hasPreviousLesson',
         },
         STEP_ENDED: [
+          {
+            // For perform mode, just increment current step index
+            target: 'playingLesson',
+            guard: 'isInstructionStep',
+            actions: [
+              () => {
+                console.log('actions STEP_ENDED; guard: instruction step');
+              },
+              assign({
+                currentStepIndex: ({ context }) => context.currentStepIndex + 1,
+                currentStepPlayCount: 0,
+              }),
+              { type: 'updateTimeRemaining' },
+            ],
+          },
           {
             // For perform mode, just increment current step index
             target: 'playingLesson',
@@ -508,10 +534,10 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'hasRemainingLoops',
             actions: [
-              assign({
-                currentLessonLoopCount: ({ context }) => context.currentLessonLoopCount + 1,
-                currentStepPlayCount: 0,
-              }),
+              // assign({
+              //   currentLessonLoopCount: ({ context }) => context.currentLessonLoopCount + 1,
+              //   currentStepPlayCount: 0,
+              // }),
               () => {
                 console.log('Loop ended, incrementing lesson loop count');
               },

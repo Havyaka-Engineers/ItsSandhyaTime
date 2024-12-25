@@ -19,29 +19,32 @@ export function calculateLessonDuration(lesson: Lesson, settings: SessionSetting
   console.log(`Initial duration: ${lesson.duration} seconds`);
 
   let duration = lesson.duration;
+  console.log('settings', settings);
+  console.log('MODE_MULTIPLIERS', MODE_MULTIPLIERS);
+  console.log('SPEED_MULTIPLIERS', SPEED_MULTIPLIERS);
 
-  // Apply speed multiplier
-  const speedMultiplier = SPEED_MULTIPLIERS[settings.chantingSpeed];
-  duration *= speedMultiplier;
-  console.log(`After speed multiplier (${settings.chantingSpeed}: ${speedMultiplier}x): ${duration} seconds`);
+  // // Apply speed multiplier
+  // const speedMultiplier = SPEED_MULTIPLIERS[settings.chantingSpeed];
+  // duration *= speedMultiplier;
+  // console.log(`After speed multiplier (${settings.chantingSpeed}: ${speedMultiplier}x): ${duration} seconds`);
 
-  // Apply mode multiplier if not a looped lesson
-  if (!lesson.isLoopedLesson) {
-    const modeMultiplier = MODE_MULTIPLIERS[settings.learningMode];
-    duration *= modeMultiplier;
-    console.log(`After mode multiplier (${settings.learningMode}: ${modeMultiplier}x): ${duration} seconds`);
-  } else {
-    console.log(`Lesson is looped, skipping mode multiplier`);
-  }
+  // // Apply mode multiplier if not a looped lesson
+  // if (!lesson.isLoopedLesson) {
+  //   const modeMultiplier = MODE_MULTIPLIERS[settings.learningMode];
+  //   duration *= modeMultiplier;
+  //   console.log(`After mode multiplier (${settings.learningMode}: ${modeMultiplier}x): ${duration} seconds`);
+  // } else {
+  //   console.log(`Lesson is looped, skipping mode multiplier`);
+  // }
 
-  // Handle looped lessons
-  if (lesson.isLoopedLesson) {
-    console.log(`Looped lesson with count: ${lesson.loopCount}`);
-    duration *= lesson.loopCount;
-    console.log(`After applying loop count: ${duration} seconds`);
-  }
+  // // Handle looped lessons
+  // if (lesson.isLoopedLesson) {
+  //   console.log(`Looped lesson with count: ${lesson.loopCount}`);
+  //   duration *= lesson.loopCount;
+  //   console.log(`After applying loop count: ${duration} seconds`);
+  // }
 
-  console.log(`Final duration: ${duration} seconds\n`);
+  // console.log(`Final duration: ${duration} seconds\n`);
   return duration;
 }
 
