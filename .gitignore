@@ -12,7 +12,8 @@ dist
 dev-dist
 dist-ssr
 *.local
-
+package-lock.json
+*.tsbuildinfo
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -28,3 +29,5 @@ dist-ssr
 # firebase
 .firebase
 firebase.config.prod.ts
+.env
+firebase.config.dev.ts
