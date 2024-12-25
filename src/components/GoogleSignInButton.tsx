@@ -30,7 +30,7 @@ function GoogleSignInButton() {
   };
 
   if (signedIn) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/onboarding" />;
   }
 
   return (
@@ -45,7 +45,7 @@ function GoogleSignInButton() {
           style={{ height: '60px', background: '#B43403' }}
         >
           {/* <img src="/android_neutral_rd_ctn@1x.png" alt="Sign In with Google" className="w-full h-auto" /> */}
-          <p className="text-xl"> Continue with google</p>
+          <p className="text-xl text-white"> Continue with google</p>
         </Button>
       )}
     </Block>
