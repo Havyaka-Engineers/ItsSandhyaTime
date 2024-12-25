@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
-import { getLessonByCode } from '../data/mockLessons';
+import { getLessonByCode } from '../data/lessons';
 import { calculateTotalDuration, formatTime } from '../utils/durationCalculator';
 
 function ReviewSessionSetting() {
@@ -14,26 +14,30 @@ function ReviewSessionSetting() {
     sandhyaTime: 'pratah',
     learningMode: 'repeat',
     chantingSpeed: 'regular',
-    gayatriCount: 10,
-    ashtakshariCount: 28,
-    panchakshariCount: 54,
     vocalPitch: 'deep',
     duration: 0,
     language: 'english',
     lessons: [],
+    loops: {
+      gayatriCount: 10,
+      ashtakshariCount: 28,
+      panchakshariCount: 54,
+      pranayamaCount: 3,
+    },
   });
 
   // Function to build lessons array with current settings
   const buildLessonsArray = (settings: SessionSettings): Lesson[] => {
+    console.log('settings', settings);
     const lessons: Lesson[] = [];
 
-    lessons.push(getLessonByCode('ACHAMANAM'));
-    lessons.push(getLessonByCode('BHASMADHARANAM'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('SANKALPA_PRATAH') : getLessonByCode('SANKALPA_SAYAM'));
-    lessons.push(getLessonByCode('MARJANAM1'));
-    lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('MARJANAM2_PRATAH') : getLessonByCode('MARJANAM2_SAYAM'));
-    lessons.push(getLessonByCode('MARJANAM3'));
-    lessons.push({ ...getLessonByCode('GAYATRI_JAPA'), loopCount: settings.gayatriCount });
+    lessons.push(getLessonByCode('VISHNU_SMARANA'));
+    // lessons.push(getLessonByCode('ACHAMANAM'));
+    // lessons.push(getLessonByCode('BHASMADHARANAM'));
+    // lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('SANKALPA_PRATAH') : getLessonByCode('SANKALPA_SAYAM'));
+    // lessons.push(getLessonByCode('MARJANAM1'));
+    // lessons.push(settings.sandhyaTime === 'pratah' ? getLessonByCode('MARJANAM2_PRATAH') : getLessonByCode('MARJANAM2_SAYAM'));
+    // lessons.push(getLessonByCode('MARJANAM3'));
     // lessons.push(settings.learningMode === 'repeat' ?
     //   getLessonByCode('PRANAYAMA_REPEAT') :
     //   getLessonByCode('PRANAYAMA_PERFORM')
@@ -76,11 +80,20 @@ function ReviewSessionSetting() {
 
   const setChantingSpeed = (speed: SessionSettings['chantingSpeed']) => updateSessionSettings({ chantingSpeed: speed });
 
-  const setGayatriCount = (count: number) => updateSessionSettings({ gayatriCount: count });
+  const setGayatriCount = (count: number) =>
+    updateSessionSettings({
+      loops: { ...sessionSettings.loops, gayatriCount: count },
+    });
 
-  const setAshtakshariCount = (count: number) => updateSessionSettings({ ashtakshariCount: count });
+  const setAshtakshariCount = (count: number) =>
+    updateSessionSettings({
+      loops: { ...sessionSettings.loops, ashtakshariCount: count },
+    });
 
-  const setPanchakshariCount = (count: number) => updateSessionSettings({ panchakshariCount: count });
+  const setPanchakshariCount = (count: number) =>
+    updateSessionSettings({
+      loops: { ...sessionSettings.loops, panchakshariCount: count },
+    });
 
   const setVocalPitch = (pitch: SessionSettings['vocalPitch']) => updateSessionSettings({ vocalPitch: pitch });
 
@@ -150,7 +163,11 @@ function ReviewSessionSetting() {
             <div className="font-medium">Gayatri</div>
             <Segmented>
               {[10, 28, 54, 108].map((count) => (
-                <SegmentedButton key={count} active={sessionSettings.gayatriCount === count} onClick={() => setGayatriCount(count)}>
+                <SegmentedButton
+                  key={count}
+                  active={sessionSettings.loops.gayatriCount === count}
+                  onClick={() => setGayatriCount(count)}
+                >
                   {count}
                 </SegmentedButton>
               ))}
@@ -164,7 +181,7 @@ function ReviewSessionSetting() {
               {[28, 54, 108, 216].map((count) => (
                 <SegmentedButton
                   key={count}
-                  active={sessionSettings.ashtakshariCount === count}
+                  active={sessionSettings.loops.ashtakshariCount === count}
                   onClick={() => setAshtakshariCount(count)}
                 >
                   {count}
@@ -180,7 +197,7 @@ function ReviewSessionSetting() {
               {[54, 108, 216, 512].map((count) => (
                 <SegmentedButton
                   key={count}
-                  active={sessionSettings.panchakshariCount === count}
+                  active={sessionSettings.loops.panchakshariCount === count}
                   onClick={() => setPanchakshariCount(count)}
                 >
                   {count}
