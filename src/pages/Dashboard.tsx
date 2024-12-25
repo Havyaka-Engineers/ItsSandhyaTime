@@ -49,6 +49,19 @@ const getSunriseSunset = async (latitude: number, longitude: number): Promise<Su
   }
 };
 
+const sendTimesToServiceWorker = (sunriseTimestamp: number, sunsetTimestamp: number) => {
+  if (navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'SET_SUN_TIMES',
+      sunrise: sunriseTimestamp,
+      sunset: sunsetTimestamp,
+    });
+    console.log('Sunrise and sunset times sent to Service Worker');
+  } else {
+    console.error('Service Worker not available to receive messages.');
+  }
+};
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState<Location | null>(null);
@@ -124,10 +137,20 @@ const Dashboard: React.FC = () => {
       setLocation({ latitude, longitude });
 
       const { sunrise, sunset } = await getSunriseSunset(latitude, longitude);
+
+      const sunriseTimestamp = new Date(sunrise).getTime();
+      const sunsetTimestamp = new Date(sunset).getTime();
+
       setSunTimes({
-        sunrise: new Date(sunrise).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        sunset: new Date(sunset).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        sunrise: new Date(sunriseTimestamp).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        sunset: new Date(sunsetTimestamp).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
       });
+
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        // Send sunrise and sunset times to the Service Worker
+        sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
+      }
     } catch (error) {
       console.error('Error fetching location or sun times:', error);
     }
