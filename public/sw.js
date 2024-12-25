@@ -114,29 +114,20 @@ const scheduleNotifications = async (sunrise, sunset) => {
   console.log('[Service Worker] Scheduling notifications for:', { sunrise, sunset });
   const now = Date.now();
 
-  // Add a test notification for 10 seconds from now
-  // const testTime = now + 10000; // 10 seconds from now
-  // await scheduleNotification(
-  //   'Test Notification',
-  //   'This is a test notification that should appear 10 seconds after scheduling',
-  //   testTime,
-  // );
-  // console.log('[Service Worker] Scheduled test notification');
-
-  // Schedule Sunrise Notification
-  if (sunrise > now) {
-    await scheduleNotification('Sunrise Reminder', 'The sun is rising! Start your day with positivity 🌞', sunrise);
+  // Schedule sunrise notification if the current time is before sunrise
+  if (now < sunrise) {
+    await scheduleNotification('Sunrise Reminder', 'The sun is rising! Start your day with positivity 🌞', sunrise, 'sunrise-today');
   } else {
     console.log('[Service Worker] Sunrise time is in the past:', new Date(sunrise).toLocaleString());
   }
 
-  // Schedule Sunset Notification
-  if (sunset > now) {
-    await scheduleNotification('Sunset Reminder', 'The sun is setting! Reflect on your day 🌅', sunset);
+  // Schedule sunset notification if the current time is before sunset
+  if (now < sunset) {
+    await scheduleNotification('Sunset Reminder', 'The sun is setting! Reflect on your day 🌅', sunset, 'sunset-today');
   } else {
     console.log('[Service Worker] Sunset time is in the past:', new Date(sunset).toLocaleString());
   }
-};
+}
 
 // Function to schedule a single notification
 const scheduleNotification = async (title, body, timestamp) => {

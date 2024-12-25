@@ -156,6 +156,28 @@ const showNotification = async (title: string, body: string, data: any = {}) => 
   }
 };
 
+const fetchAndSendSunTimes = async () => {
+  try {
+    const { latitude, longitude } = await getUserLocation();
+    const { sunrise, sunset } = await getSunriseSunset(latitude, longitude);
+
+    const sunriseTimestamp = new Date(sunrise).getTime();
+    const sunsetTimestamp = new Date(sunset).getTime();
+
+    await sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
+  } catch (error) {
+    console.error('Error fetching or sending sun times:', error);
+  }
+};
+
+// Call this function daily or when the app initializes
+useEffect(() => {
+  fetchAndSendSunTimes();
+  const interval = setInterval(fetchAndSendSunTimes, 24 * 60 * 60 * 1000); // Every 24 hours
+
+  return () => clearInterval(interval);
+}, []);
+
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState<Location | null>(null);
