@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Block } from 'konsta/react';
+// import { Block } from 'konsta/react';
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
 import { VISHNU_SMARANA } from '../data/lessons/VISHNU_SMARANA';
@@ -8,6 +8,9 @@ import { calculateTotalDuration } from '../utils/durationCalculator';
 import PermissionDialog from '../components/PermissionDialog';
 import logo from '../assets/SandhyaTime-Logo.svg';
 import backgroundpattern from '../assets/background-pattern2.svg';
+import sunrise from '../assets/sunrise.svg';
+import sunset from '../assets/sunset.svg';
+import start_button from '../assets/start_button.svg';
 
 // Define types
 type Location = {
@@ -190,51 +193,67 @@ const Dashboard: React.FC = () => {
         }}
       >
         {/* Header */}
-        <Block className="bg-[#6F3F24] text-white flex items-center space-x-2 shadow-md">
-          <img src={logo} alt="Logo" className="w-8 h-8" />
+        <div className="bg-[#6F3F24] text-white flex items-center justify-between shadow-md p-4">
+          <img src={logo} alt="Logo" className="w-12 h-12 ml-4" />
           <h1 className="text-lg font-bold">Sandhya Time</h1>
-        </Block>
+          <div>{''}</div>
+          <div>{''}</div>
+        </div>
 
         {/* Location and Time Details */}
-        <Block className=" bg-[#451F10] text-white shadow-md">
-          <Block className="flex justify-between items-center">
-            <div>
-              <p className="text-sm font-semibold">Today</p>
+        <div className=" bg-[#602F14] text-white shadow-md">
+          <div className="flex justify-between items-center p-4">
+            <p className="text-sm font-semibold">Today</p>
+            <div className="flex flex-col items-center justify-center">
               <p className="text-sm">
                 {sunTimes.sunrise || '--'} / {new Date().toLocaleDateString()}
               </p>
+              <p className="text-sm mt-2 text-[#A47B64]">
+                {location ? (
+                  <>
+                    Latitude: {location.latitude.toFixed(4)}
+                    <br />
+                    Longitude: {location.longitude.toFixed(4)}
+                  </>
+                ) : (
+                  'Fetching location...'
+                )}
+              </p>
             </div>
             <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button>
-          </Block>
-          <p className="text-sm mt-2">
-            {location
-              ? `Latitude: ${location.latitude.toFixed(4)}, Longitude: ${location.longitude.toFixed(4)}`
-              : 'Fetching location...'}
-          </p>
-        </Block>
+          </div>
+        </div>
 
         {/* Sunrise and Sunset Cards */}
-        <Block className="p-4 space-y-4">
+        <div className="flex flex-col item-center justify-center p-4 mt-15 space-y-10">
           {/* Sunrise Card */}
-          <Block className="bg-[#8B0000] text-white rounded-lg shadow-md p-4 flex items-center justify-between">
+          <div className="bg-[#8B0000] text-white rounded-lg shadow-md p-6 flex flex-row items-center justify-between">
+            <div>
+              <img src={sunrise} alt="sunrise" className="w-30 h-auto" />
+            </div>
             <div>
               <h2 className="text-2xl font-bold">{sunTimes.sunrise ? sunTimes.sunrise : 'Fetching...'}</h2>
               <p className="text-sm">Sunrise</p>
+              <button className="bg-[#8A2C0D] text-[#8B0000] px-4 py-2 rounded-lg shadow mt-6" onClick={handleSandhyaSessionClick}>
+                <img src={start_button} alt="Logo" className="w-15 h-auto" />
+              </button>
             </div>
-            <button className="bg-white text-[#8B0000] px-4 py-2 rounded-lg shadow" onClick={handleSandhyaSessionClick}>
-              Start
-            </button>
-          </Block>
+          </div>
 
           {/* Sunset Card */}
-          <Block className="bg-[#00008B] text-white rounded-lg shadow-md p-4 flex items-center justify-between">
+          <div className="bg-[#00008B] text-white rounded-lg shadow-md p-6  flex flex-row items-center justify-between">
+            <div>
+              <img src={sunset} alt="sunset" className="w-30 h-auto" />
+            </div>
             <div>
               <h2 className="text-2xl font-bold">{sunTimes.sunset ? sunTimes.sunset : 'Fetching...'}</h2>
               <p className="text-sm">Sunset</p>
+              <button className="bg-white text-[#00008B] px-4 py-2 rounded-lg shadow opacity-50 cursor-not-allowed mt-6">
+                <img src={start_button} alt="Logo" className="w-15 h-auto" />
+              </button>
             </div>
-            <button className="bg-white text-[#00008B] px-4 py-2 rounded-lg shadow opacity-50 cursor-not-allowed">Start</button>
-          </Block>
-        </Block>
+          </div>
+        </div>
       </div>
     </div>
   );
