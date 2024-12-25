@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
 import { UserPreferences, VocalPitch } from '../types/UserProfile';
-import backgroundPattern2 from '../assets/background-pattern-2.svg';
+import backgroundPattern2 from '../assets/background-pattern2.svg';
 import sandhyaTimeLogo from '../assets/SandhyaTime-Logo.svg';
 import { gotras } from '../types/gotra';
 
