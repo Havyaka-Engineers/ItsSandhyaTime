@@ -49,16 +49,110 @@ const getSunriseSunset = async (latitude: number, longitude: number): Promise<Su
   }
 };
 
-const sendTimesToServiceWorker = (sunriseTimestamp: number, sunsetTimestamp: number) => {
-  if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
+const sendTimesToServiceWorker = async (sunriseTimestamp: number, sunsetTimestamp: number) => {
+  try {
+    // Wait for service worker registration
+    const registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker ready state:', {
+      active: !!registration.active,
+      installing: !!registration.installing,
+      waiting: !!registration.waiting,
+    });
+
+    if (!registration.active) {
+      throw new Error('Service Worker is not active');
+    }
+
+    // Create a message channel
+    const messageChannel = new MessageChannel();
+
+    // Create a promise to wait for the response
+    const responsePromise = new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        messageChannel.port1.onmessage = null;
+        reject(new Error('Timeout waiting for service worker response'));
+      }, 5000);
+
+      messageChannel.port1.onmessage = (event) => {
+        console.log('Received response from Service Worker:', event.data);
+        clearTimeout(timeoutId);
+        if (event.data.error) {
+          reject(new Error(event.data.error));
+        } else {
+          resolve(event.data);
+        }
+      };
+    });
+
+    // Send the message with the port
+    const message = {
       type: 'SET_SUN_TIMES',
       sunrise: sunriseTimestamp,
       sunset: sunsetTimestamp,
+    };
+    console.log('Sending message to Service Worker:', message);
+
+    registration.active.postMessage(message, [messageChannel.port2]);
+
+    // Wait for the response
+    await responsePromise;
+    console.log('Successfully received response from Service Worker');
+  } catch (error) {
+    console.error('Error sending message to Service Worker:', error);
+  }
+};
+
+const showNotification = async (title: string, body: string, data: any = {}) => {
+  try {
+    // Wait for service worker registration
+    const registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker ready state:', {
+      active: !!registration.active,
+      installing: !!registration.installing,
+      waiting: !!registration.waiting,
     });
-    console.log('Sunrise and sunset times sent to Service Worker');
-  } else {
-    console.error('Service Worker not available to receive messages.');
+
+    if (!registration.active) {
+      throw new Error('Service Worker is not active');
+    }
+
+    // Create a message channel
+    const messageChannel = new MessageChannel();
+
+    // Create a promise to wait for the response
+    const responsePromise = new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        messageChannel.port1.onmessage = null;
+        reject(new Error('Timeout waiting for service worker response'));
+      }, 5000);
+
+      messageChannel.port1.onmessage = (event) => {
+        console.log('Received response from Service Worker:', event.data);
+        clearTimeout(timeoutId);
+        if (event.data.error) {
+          reject(new Error(event.data.error));
+        } else {
+          resolve(event.data);
+        }
+      };
+    });
+
+    // Send the message with the port
+    const message = {
+      type: 'SHOW_NOTIFICATION',
+      title,
+      body,
+      data,
+    };
+    console.log('Sending notification message to Service Worker:', message);
+
+    registration.active.postMessage(message, [messageChannel.port2]);
+
+    // Wait for the response
+    await responsePromise;
+    console.log('Successfully showed notification');
+  } catch (error) {
+    console.error('Error showing notification:', error);
   }
 };
 
@@ -127,6 +221,10 @@ const Dashboard: React.FC = () => {
   // };
 
   const handleSandhyaSessionClick = () => {
+    // Show a notification when starting the session
+    showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
+      type: 'session_start',
+    });
     navigate('/sandhya-session', { state: { sessionSettings } });
   };
 
@@ -148,43 +246,56 @@ const Dashboard: React.FC = () => {
 
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        // Send sunrise and sunset times to the Service Worker
-        sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
+        // Ensure service worker is registered before sending messages
+        await sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
       }
     } catch (error) {
       console.error('Error fetching location or sun times:', error);
     }
   };
 
-  // Check permissions on mount
+  // Update useEffect to register service worker and initialize app
   useEffect(() => {
-    const checkPermissions = () => {
-      const notificationPermission = localStorage.getItem('notificationPermission');
-      const locationPermission = localStorage.getItem('locationPermission');
-      const lastRequestedAt = localStorage.getItem('permissionsLastRequestedAt');
+    const initializeApp = async () => {
+      try {
+        // Register service worker
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker registration successful:', registration);
 
-      if (notificationPermission === 'granted' && locationPermission === 'granted') {
-        fetchSunriseSunsetData();
-        return;
-      }
+        // Wait for the service worker to be ready
+        await navigator.serviceWorker.ready;
+        console.log('Service Worker is ready');
 
-      // If permissions were never requested, show dialog
-      if (!lastRequestedAt) {
-        setShowPermissionDialog(true);
-        return;
-      }
+        // Check permissions and fetch data
+        const notificationPermission = localStorage.getItem('notificationPermission');
+        const locationPermission = localStorage.getItem('locationPermission');
+        const lastRequestedAt = localStorage.getItem('permissionsLastRequestedAt');
 
-      // Check if a week has passed since last request
-      const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-      const lastRequested = new Date(lastRequestedAt).getTime();
-      const now = new Date().getTime();
+        if (notificationPermission === 'granted' && locationPermission === 'granted') {
+          fetchSunriseSunsetData();
+          return;
+        }
 
-      if (now - lastRequested > oneWeek) {
-        setShowPermissionDialog(true);
+        // If permissions were never requested, show dialog
+        if (!lastRequestedAt) {
+          setShowPermissionDialog(true);
+          return;
+        }
+
+        // Check if a week has passed since last request
+        const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        const lastRequested = new Date(lastRequestedAt).getTime();
+        const now = new Date().getTime();
+
+        if (now - lastRequested > oneWeek) {
+          setShowPermissionDialog(true);
+        }
+      } catch (error) {
+        console.error('Service Worker registration failed:', error);
       }
     };
 
-    checkPermissions();
+    initializeApp();
   }, []);
 
   const requestPermissions = async () => {
