@@ -1,7 +1,7 @@
-import { Block, Button } from 'konsta/react';
 import { auth } from '../firebase.config';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { BiLogOut } from 'react-icons/bi';
 
 function SignOutButton() {
   const [signedIn, setSignedIn] = useState(true);
@@ -25,9 +25,9 @@ function SignOutButton() {
   }
 
   return (
-    <Block>
-      <Button onClick={signOut}>Sign Out</Button>
-    </Block>
+    <div>
+      <BiLogOut onClick={signOut} />
+    </div>
   );
 }
 
