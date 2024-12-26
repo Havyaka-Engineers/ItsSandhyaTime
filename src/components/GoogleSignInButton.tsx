@@ -1,36 +1,40 @@
-// GoogleSignInButton.tsx
 import { useState } from 'react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../firebase.config';
 import { Navigate } from 'react-router-dom';
+import { auth } from '../firebase.config';
 import { Block, Button, Preloader } from 'konsta/react';
+import { userService } from '../services/userService';
 
 function GoogleSignInButton() {
-  const [signedIn, setSignedIn] = useState(false);
+  const [redirectPath, setRedirectPath] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const signInWithGoogle = () => {
-    //sign in is async op. Until, the promise resolves, we need to show loading icon.
+  const signInWithGoogle = async () => {
     setLoading(true);
-
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // Handle successful sign-in
-        console.log('Google Sign In Successful.', result.user);
-        setSignedIn(true);
-      })
-      .catch((error) => {
-        // Handle errors
-        console.error('Error during sign-in:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Check user existence in the database
+      const userProfile = await userService.getUserProfile(user.uid);
+
+      if (userProfile) {
+        // User exists, navigate to landing page
+        setRedirectPath('/landing');
+      } else {
+        setRedirectPath('/onboarding');
+      }
+    } catch (error) {
+      console.error('Error during sign-in:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (signedIn) {
-    return <Navigate to="/onboarding" />;
+  if (redirectPath) {
+    return <Navigate to={redirectPath} />;
   }
 
   return (
@@ -41,11 +45,10 @@ function GoogleSignInButton() {
         <Button
           large
           onClick={signInWithGoogle}
-          className="flex justify-center items-center p-0 border-none cursor-pointer "
+          className="flex justify-center items-center p-0 border-none cursor-pointer"
           style={{ height: '60px', background: '#B43403' }}
         >
-          {/* <img src="/android_neutral_rd_ctn@1x.png" alt="Sign In with Google" className="w-full h-auto" /> */}
-          <p className="text-xl text-white"> Continue With Google</p>
+          <p className="text-xl text-white">Continue With Google</p>
         </Button>
       )}
     </Block>
