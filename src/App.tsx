@@ -28,7 +28,7 @@ function App() {
       if (user) {
         // Check if user has completed onboarding
         const db = getFirestore();
-        const prefsDoc = await getDoc(doc(db, 'userPreferences', user.uid));
+        const prefsDoc = await getDoc(doc(db, 'users', user.uid));
         setOnboardingCompleted(prefsDoc.exists() && prefsDoc.data()?.onboardingCompleted);
       }
 
