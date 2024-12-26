@@ -1,5 +1,6 @@
 // import { Block } from 'konsta/react';
 import backgroundImage from '../assets/background-pattern.svg';
+import logo from '../assets/SandhyaTime-Logo.svg';
 const SplashScreen = () => {
   return (
     <div
@@ -8,7 +9,7 @@ const SplashScreen = () => {
     >
       <div className="flex flex-col justify-center items-center h-full w-full">
         <div className="text-center">
-          <img src="/app_icon.png" alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
+          <img src={logo} alt="App Icon" className="w-60 h-60 mx-auto mb-4" />
           {/* <div className="animate-pulse text-white text-xl">
           Loading...
         </div> */}

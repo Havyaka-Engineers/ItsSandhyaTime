@@ -12,6 +12,7 @@ import { User } from 'firebase/auth';
 import UserSettings from './pages/UserSettings';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import Player from './pages/Player';
+import Landing from './pages/Landing';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -45,6 +46,21 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker Registered', registration);
+        })
+        .catch((error) => {
+          console.error('Service Worker Registration Failed:', error);
+        });
+    } else {
+      console.warn('Service Worker not supported in this browser.');
+    }
+  }, []);
+
   if (showSplash || loading) {
     return (
       <KonstaApp theme="material" dark>
@@ -65,6 +81,7 @@ function App() {
               user ? onboardingCompleted ? <Navigate to="/dashboard" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" />
             }
           />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/onboarding" element={<UserSettings />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signin" element={<SignIn />} />
