@@ -173,19 +173,34 @@ const fetchAndSendSunTimes = async () => {
   }
 };
 
-// Call this function daily or when the app initializes
-useEffect(() => {
-  fetchAndSendSunTimes();
-  const interval = setInterval(fetchAndSendSunTimes, 24 * 60 * 60 * 1000); // Every 24 hours
-
-  return () => clearInterval(interval);
-}, []);
-
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  const redirect = true;
+
+  console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
+
+  useEffect(() => {
+    if (import.meta.env.VITE_NODE_ENV === 'production') {
+      console.log('Redirecting to landing page...');
+      navigate('/landing', { replace: true });
+    }
+  }, [navigate]);
+
+  if (import.meta.env.NODE_ENV === 'production' && redirect) {
+    console.log('Rendering redirect message...');
+    return <p>Redirecting...</p>;
+  }
+
+  // Call this function daily or when the app initializes
+  useEffect(() => {
+    fetchAndSendSunTimes();
+    const interval = setInterval(fetchAndSendSunTimes, 24 * 60 * 60 * 1000); // Every 24 hours
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Initialize session settings
   let sessionSettings: SessionSettings = {
