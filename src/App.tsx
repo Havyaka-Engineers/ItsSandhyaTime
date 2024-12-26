@@ -29,7 +29,7 @@ function App() {
         // Check if user has completed onboarding
         const db = getFirestore();
         const prefsDoc = await getDoc(doc(db, 'users', user.uid));
-        setOnboardingCompleted(prefsDoc.exists());
+        setOnboardingCompleted(prefsDoc.exists() && prefsDoc.data()?.onboardingCompleted);
       }
 
       setLoading(false);
@@ -79,7 +79,17 @@ function App() {
             path="/"
             element={
               // user ? onboardingCompleted ? <Navigate to="/dashboard" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" /> // Original
-              user ? onboardingCompleted ? <Navigate to="/landing" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" />
+              user ? (
+                onboardingCompleted ? (
+                  <Navigate to="/landing" />
+                ) : !onboardingCompleted ? (
+                  <Navigate to="/signin" />
+                ) : (
+                  <Navigate to="/onboarding" />
+                )
+              ) : (
+                <Navigate to="/signin" />
+              )
             }
           />
           <Route path="/landing" element={<Landing />} />

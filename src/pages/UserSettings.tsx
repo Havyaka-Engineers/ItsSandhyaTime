@@ -15,6 +15,7 @@ function UserSettings() {
     fullName: string;
     gotra: string;
     preferences: UserPreferences;
+    onboardingCompleted: boolean;
   }>({
     email: '',
     fullName: '',
@@ -23,6 +24,7 @@ function UserSettings() {
       language: 'english',
       vocalPitch: 'deep',
     },
+    onboardingCompleted: false,
   });
 
   useEffect(() => {
@@ -55,8 +57,11 @@ function UserSettings() {
     try {
       const userId = auth.currentUser?.uid;
       if (!userId) return;
-
-      await userService.createOrUpdateUser(userId, profile);
+      let obj = {
+        ...profile,
+        onboardingCompleted: true,
+      };
+      await userService.createOrUpdateUser(userId, obj);
       // navigate('/dashboard')
       navigate('/landing');
     } catch (error) {
