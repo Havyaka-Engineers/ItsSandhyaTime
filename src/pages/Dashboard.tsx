@@ -11,6 +11,7 @@ import backgroundpattern from '../assets/background-pattern2.svg';
 import sunrise from '../assets/sunrise.svg';
 import sunset from '../assets/sunset.svg';
 import start_button from '../assets/start_button.svg';
+import SignOutButton from '../components/SignOutButton';
 
 // Define types
 type Location = {
@@ -367,7 +368,7 @@ const Dashboard: React.FC = () => {
           <img src={logo} alt="Logo" className="w-12 h-12 ml-4" />
           <h1 className="text-lg font-bold">Sandhya Time</h1>
           <div>{''}</div>
-          <div>{''}</div>
+          <SignOutButton />
         </div>
 
         {/* Location and Time Details */}
