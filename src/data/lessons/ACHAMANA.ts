@@ -1,11 +1,11 @@
 import { Lesson } from '../../types/Lesson';
 
-export const VISHNU_SMARANA: Lesson = {
-  code: 'VISHNU_SMARANA',
-  title: 'Vishnu Smarana',
-  videoId: 1042133772,
-  description: 'Vishnu Smarana',
-  duration: 23,
+export const ACHAMANA: Lesson = {
+  code: 'ACHAMANA',
+  title: 'Achamana',
+  videoId: 1042137642,
+  description: 'Achamana',
+  duration: 25,
   steps: [
     {
       startTime: 0,
@@ -14,25 +14,25 @@ export const VISHNU_SMARANA: Lesson = {
       isLoopEnd: false,
     },
     {
-      startTime: 5.1,
+      startTime: 4.1,
       stepType: 'chantAndPerform',
       isLoopStart: false,
       isLoopEnd: false,
     },
     {
-      startTime: 10.9,
+      startTime: 10.1,
       stepType: 'chantAndPerform',
       isLoopStart: false,
       isLoopEnd: false,
     },
     {
-      startTime: 15.3,
+      startTime: 16.4,
       stepType: 'chantAndPerform',
       isLoopStart: false,
       isLoopEnd: false,
     },
     {
-      startTime: 19.4,
+      startTime: 22.2,
       stepType: 'chantAndPerform',
       isLoopStart: false,
       isLoopEnd: false,
