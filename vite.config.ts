@@ -13,7 +13,7 @@ export default defineConfig({
       },
       manifest: {
         name: "It's Sandhya Time!",
-        short_name: "It's Sandhya Time!",
+        short_name: "Sandhya Time!",
         description: 'PWA App for Sandhya Prayers',
         theme_color: '#ffffff',
         background_color: '#ffffff',

@@ -57,7 +57,8 @@ function UserSettings() {
       if (!userId) return;
 
       await userService.createOrUpdateUser(userId, profile);
-      navigate('/dashboard');
+      // navigate('/dashboard')
+      navigate('/landing');
     } catch (error) {
       console.error('Error saving user settings:', error);
     }

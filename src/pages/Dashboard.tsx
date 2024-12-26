@@ -11,6 +11,7 @@ import backgroundpattern from '../assets/background-pattern2.svg';
 import sunrise from '../assets/sunrise.svg';
 import sunset from '../assets/sunset.svg';
 import start_button from '../assets/start_button.svg';
+import SignOutButton from '../components/SignOutButton';
 
 // Define types
 type Location = {
@@ -178,21 +179,20 @@ const Dashboard: React.FC = () => {
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
-  const redirect = true;
+  // const redirect = true;
 
-  console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
+  // console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
 
-  useEffect(() => {
-    if (import.meta.env.VITE_NODE_ENV === 'production') {
-      console.log('Redirecting to landing page...');
-      navigate('/landing', { replace: true });
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (import.meta.env.VITE_NODE_ENV === 'production') {
+  //     navigate('/landing', { replace: true });
+  //   }
+  // }, [navigate]);
 
-  if (import.meta.env.NODE_ENV === 'production' && redirect) {
-    console.log('Rendering redirect message...');
-    return <p>Redirecting...</p>;
-  }
+  // if (import.meta.env.NODE_ENV === 'production' && redirect) {
+  //   console.log('Rendering redirect message...');
+  //   return <p>Redirecting...</p>;
+  // }
 
   // Call this function daily or when the app initializes
   useEffect(() => {
@@ -367,7 +367,7 @@ const Dashboard: React.FC = () => {
           <img src={logo} alt="Logo" className="w-12 h-12 ml-4" />
           <h1 className="text-lg font-bold">Sandhya Time</h1>
           <div>{''}</div>
-          <div>{''}</div>
+          <SignOutButton />
         </div>
 
         {/* Location and Time Details */}

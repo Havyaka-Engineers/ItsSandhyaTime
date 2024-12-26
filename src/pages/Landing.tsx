@@ -1,5 +1,6 @@
 import { Page } from 'konsta/react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background-pattern.svg';
 
 const calculateTimeLeft = () => {
@@ -20,6 +21,7 @@ const calculateTimeLeft = () => {
 
 const Landing = () => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,6 +31,12 @@ const Landing = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handleTouchStart = () => {
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 5000);
+  };
+
   return (
     <Page>
       <div
@@ -36,6 +44,8 @@ const Landing = () => {
         style={{
           backgroundImage: `linear-gradient(rgba(83, 44, 22, 0.8),rgba(83, 44, 22, 0.8)),url(${backgroundImage})`,
         }}
+        onMouseDown={handleTouchStart}
+        onTouchStart={handleTouchStart}
       >
         <div className="flex flex-col justify-center items-center h-full w-full">
           {/* App Icon */}
