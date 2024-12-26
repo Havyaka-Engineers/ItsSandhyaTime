@@ -81,7 +81,7 @@ function App() {
               user ? onboardingCompleted ? <Navigate to="/dashboard" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" />
             }
           />
-          <Route path="/Landing" element={<Landing />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/onboarding" element={<UserSettings />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signin" element={<SignIn />} />
