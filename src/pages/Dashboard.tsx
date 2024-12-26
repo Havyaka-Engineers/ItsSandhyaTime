@@ -209,9 +209,15 @@ const Dashboard: React.FC = () => {
                 {sunTimes.sunrise || '--'} / {new Date().toLocaleDateString()}
               </p>
               <p className="text-sm mt-2 text-[#A47B64]">
-                {location
-                  ? `Latitude: ${location.latitude.toFixed(4)}, Longitude: ${location.longitude.toFixed(4)}`
-                  : 'Fetching location...'}
+                {location ? (
+                  <>
+                    Latitude: {location.latitude.toFixed(4)}
+                    <br />
+                    Longitude: {location.longitude.toFixed(4)}
+                  </>
+                ) : (
+                  'Fetching location...'
+                )}
               </p>
             </div>
             <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button>
