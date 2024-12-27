@@ -84,10 +84,9 @@ function UserSettings() {
         <div className="relative z-10 p-6">
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
-              <p className="text-white mb-2">Email</p>
+              <p className="text-white">Email</p>
               <ListInput
-                outline
-                inputStyle={{ background: '#D1D5DB', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
+                inputStyle={{ background: '#D1D5DB', height: 40, borderRadius: 10, color: '#6B7280', border: 'none' }}
                 placeholder="Enter email"
                 type="email"
                 value={profile.email}
@@ -97,11 +96,10 @@ function UserSettings() {
               <p className="text-[#F3F4F6] mb-2 text-sm mt-2">Description</p>
             </div>
             <div className="mt-4">
-              <p className="text-white mb-2">Name</p>
+              <p className="text-white">Name</p>
               <ListInput
-                outline
                 placeholder="Enter name"
-                inputStyle={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
+                inputStyle={{ background: '#fff', height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="text"
                 value={profile.fullName}
                 onChange={(e) =>
@@ -114,11 +112,10 @@ function UserSettings() {
               <p className="text-[#F3F4F6] mb-2 text-sm mt-2">Description</p>
             </div>
             <div className="mt-4">
-              <p className="text-white mb-2">Your Gothra</p>
+              <p className="text-white">Your Gothra</p>
               <ListInput
-                outline
                 placeholder="select gothra"
-                inputStyle={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
+                inputStyle={{ background: '#fff', height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="select"
                 value={profile.gotra}
                 onChange={(e) =>
