@@ -66,7 +66,7 @@ function UserSettings() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="min-h-screen w-full overflow-y-auto flex items-center justify-center">
       <div
         className="w-full h-full max-w-lg relative"
         style={{
