@@ -87,7 +87,7 @@ function UserSettings() {
               <p className="text-white mb-2">Email</p>
               <ListInput
                 outline
-                style={{ background: '#D1D5DB', height: 50, borderRadius: 10, padding: 0, color: '#6B7280' }}
+                style={{ background: '#D1D5DB', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 placeholder="Enter email"
                 type="email"
                 value={profile.email}
@@ -101,7 +101,7 @@ function UserSettings() {
               <ListInput
                 outline
                 placeholder="Enter name"
-                style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280' }}
+                style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="text"
                 value={profile.fullName}
                 onChange={(e) =>
@@ -118,7 +118,7 @@ function UserSettings() {
               <ListInput
                 outline
                 placeholder="select gothra"
-                style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280' }}
+                style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="select"
                 value={profile.gotra}
                 onChange={(e) =>
@@ -148,6 +148,7 @@ function UserSettings() {
                       <ListItem
                         label
                         title="Male Voice (Deep)"
+                        style={{ color: 'black' }}
                         media={
                           <Radio
                             component="div"
@@ -179,6 +180,7 @@ function UserSettings() {
                       <ListItem
                         label
                         title="Kid (Sharp Voice)"
+                        style={{ color: 'black' }}
                         media={
                           <Radio
                             component="div"
