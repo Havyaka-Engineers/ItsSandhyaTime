@@ -66,7 +66,7 @@ function UserSettings() {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-y-auto flex items-center justify-center">
+    <div className="h-screen w-full overflow-y-auto flex items-center justify-center">
       <div
         className="w-full h-full max-w-lg relative"
         style={{
@@ -84,12 +84,12 @@ function UserSettings() {
         <Block className="relative z-10">
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
-              <p className="text-white">Email</p>
+              <p className="text-white ml-4">Email</p>
               <ListInput className="bg-white" placeholder="Enter email" type="email" value={profile.email} disabled readOnly />
-              <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
+              {/* <p className="text-[#F3F4F6] mb-2 text-sm ml-4">Description</p> */}
             </div>
             <div className="mt-4">
-              <p className="text-white">Name</p>
+              <p className="text-white ml-4">Name</p>
               <ListInput
                 placeholder="Enter name"
                 type="text"
@@ -101,10 +101,10 @@ function UserSettings() {
                   }))
                 }
               />
-              <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
+              {/* <p className="text-[#F3F4F6] mb-2 text-sm ml-4">Description</p> */}
             </div>
             <div className="mt-4">
-              <p className="text-white">Your Gothra</p>
+              <p className="text-white ml-4">Your Gothra</p>
               <ListInput
                 placeholder="select gothra"
                 type="select"
@@ -123,7 +123,9 @@ function UserSettings() {
                   </option>
                 ))}
               </ListInput>
-              <p className="text-[#F3F4F6] text-sm">If you don't know the gothra, by default it will be set as Kashyapa gothra</p>
+              <p className="text-[#F3F4F6] text-sm ml-4">
+                If you don't know the gothra, by default it will be set as Kashyapa gothra
+              </p>
             </div>
             <Block className="mt-10 w-full">
               <p className="text-white mb-2">Vocal Pitch</p>
@@ -152,9 +154,7 @@ function UserSettings() {
                           />
                         }
                       />
-                      <div className="mb-2">
-                        <p className="ml-14 text-sm text-[#6B7280]">Description</p>
-                      </div>
+                      <div className="mb-2">{/* <p className="ml-14 text-sm text-[#6B7280]">Description</p> */}</div>
                     </div>
                     <div className="flex justify-center items-center">
                       <img src={VoicePlay} alt="voice-play" className="w-8 h-auto" />
@@ -184,9 +184,7 @@ function UserSettings() {
                           />
                         }
                       />
-                      <div className="mb-2">
-                        <p className="ml-14 text-sm text-[#6B7280]">Description</p>
-                      </div>
+                      <div className="mb-2">{/* <p className="ml-14 text-sm text-[#6B7280]">Description</p> */}</div>
                     </div>
                     <div className="flex justify-center items-center">
                       <img src={VoicePlay} alt="voice-play" className="w-8 h-auto" />
