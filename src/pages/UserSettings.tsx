@@ -81,12 +81,12 @@ function UserSettings() {
         <div className="flex justify-center items-center mt-10 relative z-10">
           <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-32 h-auto" />
         </div>
-        <div className="relative z-10 p-6">
+        <Block className="relative z-10">
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white">Email</p>
               <ListInput
-                inputStyle={{ background: '#D1D5DB', height: 40, borderRadius: 10, color: '#6B7280', border: 'none' }}
+                inputStyle={{ height: 40, borderRadius: 10, color: '#6B7280', border: 'none' }}
                 placeholder="Enter email"
                 type="email"
                 value={profile.email}
@@ -99,7 +99,7 @@ function UserSettings() {
               <p className="text-white">Name</p>
               <ListInput
                 placeholder="Enter name"
-                inputStyle={{ background: '#fff', height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
+                inputStyle={{ height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="text"
                 value={profile.fullName}
                 onChange={(e) =>
@@ -115,7 +115,7 @@ function UserSettings() {
               <p className="text-white">Your Gothra</p>
               <ListInput
                 placeholder="select gothra"
-                inputStyle={{ background: '#fff', height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
+                inputStyle={{ height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="select"
                 value={profile.gotra}
                 onChange={(e) =>
@@ -134,7 +134,7 @@ function UserSettings() {
               </ListInput>
               <p className="text-[#F3F4F6] text-sm">If you don't know the gothra, by default it will be set as Kashyapa gothra</p>
             </div>
-            <div className="mt-10 w-full">
+            <Block className="mt-10 w-full">
               <p className="text-white mb-2">Vocal Pitch</p>
               <div className="bg-[#fff] rounded-xl w-full px-2 py-2">
                 <List strongIos outlineIos style={{ margin: 0 }}>
@@ -203,7 +203,7 @@ function UserSettings() {
                   </div>
                 </List>
               </div>
-            </div>
+            </Block>
           </List>
 
           <Block className="p-4">
@@ -211,7 +211,7 @@ function UserSettings() {
               <p className="text-white">Save</p>
             </Button>
           </Block>
-        </div>
+        </Block>
       </div>
     </div>
   );
