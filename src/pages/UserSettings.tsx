@@ -85,21 +85,13 @@ function UserSettings() {
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white">Email</p>
-              <ListInput
-                inputStyle={{ height: 40, borderRadius: 10, color: '#6B7280', border: 'none' }}
-                placeholder="Enter email"
-                type="email"
-                value={profile.email}
-                disabled
-                readOnly
-              />
+              <ListInput placeholder="Enter email" type="email" value={profile.email} disabled readOnly />
               <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
             </div>
             <div className="mt-4">
               <p className="text-white">Name</p>
               <ListInput
                 placeholder="Enter name"
-                inputStyle={{ height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="text"
                 value={profile.fullName}
                 onChange={(e) =>
@@ -115,7 +107,6 @@ function UserSettings() {
               <p className="text-white">Your Gothra</p>
               <ListInput
                 placeholder="select gothra"
-                inputStyle={{ height: 40, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="select"
                 value={profile.gotra}
                 onChange={(e) =>
