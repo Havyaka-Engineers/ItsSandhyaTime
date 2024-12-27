@@ -93,7 +93,7 @@ function UserSettings() {
                 disabled
                 readOnly
               />
-              <p className="text-[#F3F4F6] mb-2 text-sm mt-2">Description</p>
+              <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
             </div>
             <div className="mt-4">
               <p className="text-white">Name</p>
@@ -109,7 +109,7 @@ function UserSettings() {
                   }))
                 }
               />
-              <p className="text-[#F3F4F6] mb-2 text-sm mt-2">Description</p>
+              <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
             </div>
             <div className="mt-4">
               <p className="text-white">Your Gothra</p>
@@ -132,9 +132,7 @@ function UserSettings() {
                   </option>
                 ))}
               </ListInput>
-              <p className="text-[#F3F4F6] mb-2 text-sm mt-2">
-                If you don't know the gothra, by default it will be set as Kashyapa gothra
-              </p>
+              <p className="text-[#F3F4F6] text-sm">If you don't know the gothra, by default it will be set as Kashyapa gothra</p>
             </div>
             <div className="mt-10 w-full">
               <p className="text-white mb-2">Vocal Pitch</p>
