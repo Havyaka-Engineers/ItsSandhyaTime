@@ -142,7 +142,7 @@ function UserSettings() {
                     <div>
                       <ListItem
                         label
-                        title="Male Voice (Deep)"
+                        title={<span className="text-black">Male Voice (Deep)</span>}
                         style={{ color: 'black' }}
                         media={
                           <Radio
@@ -174,7 +174,7 @@ function UserSettings() {
                     <div>
                       <ListItem
                         label
-                        title="Kid (Sharp Voice)"
+                        title={<span className="text-black">Kid (Sharp Voice)</span>}
                         style={{ color: 'black' }}
                         media={
                           <Radio
@@ -208,7 +208,7 @@ function UserSettings() {
 
           <Block className="p-4">
             <Button large onClick={handleSave} style={{ background: '#B43403' }}>
-              Save
+              <p className="text-white">Save</p>
             </Button>
           </Block>
         </div>
