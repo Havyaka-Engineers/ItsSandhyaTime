@@ -78,11 +78,11 @@ function UserSettings() {
         }}
       >
         {/* Logo Section */}
-        <div className="flex justify-center items-center mt-5 relative z-10">
-          <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-30 h-auto" />
+        <div className="flex justify-center items-center mt-10 relative z-10">
+          <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-32 h-auto" />
         </div>
         <div className="relative z-10 p-6">
-          <List strongIos insetIos>
+          <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white mb-2">Email</p>
               <ListInput
