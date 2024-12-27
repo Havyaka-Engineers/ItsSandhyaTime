@@ -85,7 +85,7 @@ function UserSettings() {
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white">Email</p>
-              <ListInput placeholder="Enter email" type="email" value={profile.email} disabled readOnly />
+              <ListInput className="bg-white" placeholder="Enter email" type="email" value={profile.email} disabled readOnly />
               <p className="text-[#F3F4F6] mb-2 text-sm">Description</p>
             </div>
             <div className="mt-4">
