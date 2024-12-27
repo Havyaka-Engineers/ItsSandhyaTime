@@ -81,7 +81,7 @@ function UserSettings() {
         <div className="flex justify-center items-center mt-10 relative z-10">
           <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-32 h-auto" />
         </div>
-        <div className="relative z-10 p-6">
+        <Block className="relative z-10 p-6">
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white mb-2">Email</p>
@@ -216,7 +216,7 @@ function UserSettings() {
               Save
             </Button>
           </Block>
-        </div>
+        </Block>
       </div>
     </div>
   );
