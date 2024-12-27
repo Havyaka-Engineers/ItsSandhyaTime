@@ -68,7 +68,7 @@ function UserSettings() {
   return (
     <div className="h-screen w-full overflow-y-auto flex items-center justify-center">
       <div
-        className="w-full h-full max-w-lg relative"
+        className="w-full h-screen max-w-lg relative"
         style={{
           background: '#532C16',
           backgroundImage: `url(${backgroundPattern2})`,
