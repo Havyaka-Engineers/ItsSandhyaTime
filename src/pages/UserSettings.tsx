@@ -81,13 +81,13 @@ function UserSettings() {
         <div className="flex justify-center items-center mt-10 relative z-10">
           <img src={sandhyaTimeLogo} alt="Sandhya Time Logo" className="w-32 h-auto" />
         </div>
-        <Block style={{ margin: 0 }} className="relative z-10 p-6">
+        <div className="relative z-10 p-6">
           <List strongIos insetIos style={{ margin: 0 }}>
             <div>
               <p className="text-white mb-2">Email</p>
               <ListInput
                 outline
-                // style={{ background: '#D1D5DB', height: 50, borderRadius: 10, padding: 0, color: '#6B7280',border:"none" }}
+                inputStyle={{ background: '#D1D5DB', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 placeholder="Enter email"
                 type="email"
                 value={profile.email}
@@ -101,7 +101,7 @@ function UserSettings() {
               <ListInput
                 outline
                 placeholder="Enter name"
-                // style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280',border:"none" }}
+                inputStyle={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="text"
                 value={profile.fullName}
                 onChange={(e) =>
@@ -118,7 +118,7 @@ function UserSettings() {
               <ListInput
                 outline
                 placeholder="select gothra"
-                // style={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280',border:"none" }}
+                inputStyle={{ background: '#fff', height: 50, borderRadius: 10, padding: 0, color: '#6B7280', border: 'none' }}
                 type="select"
                 value={profile.gotra}
                 onChange={(e) =>
@@ -216,7 +216,7 @@ function UserSettings() {
               Save
             </Button>
           </Block>
-        </Block>
+        </div>
       </div>
     </div>
   );
