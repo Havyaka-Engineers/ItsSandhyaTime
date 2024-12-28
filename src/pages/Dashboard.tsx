@@ -43,6 +43,9 @@ import { useUserSettings } from '../contexts/UserSettingsContext';
 type Location = {
   latitude: number;
   longitude: number;
+  city: string;
+  stateCode: string;
+  country: string;
 };
 
 type SunTimes = {
@@ -50,17 +53,16 @@ type SunTimes = {
   sunset: string;
 };
 
-// Function to get user's location using Geolocation API
+// Function to get user's location using hardcoded values
 const getUserLocation = async (): Promise<Location> => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        resolve({ latitude, longitude });
-      },
-      (error) => reject(error),
-    );
-  });
+  console.warn('Using hardcoded location: Bangalore, KA, India');
+  return {
+    latitude: 12.9716,
+    longitude: 77.5946,
+    city: 'Bangalore',
+    stateCode: 'KA',
+    country: 'India',
+  };
 };
 
 // Function to fetch sunrise and sunset times using Sunrise-Sunset API
@@ -321,10 +323,9 @@ const Dashboard: React.FC = () => {
   const fetchSunriseSunsetData = async () => {
     try {
       const { latitude, longitude } = await getUserLocation();
-      setLocation({ latitude, longitude });
+      setLocation({ latitude, longitude, city: 'Bangalore', stateCode: 'KA', country: 'India' });
 
       const { sunrise, sunset } = await getSunriseSunset(latitude, longitude);
-
       const sunriseTimestamp = new Date(sunrise).getTime();
       const sunsetTimestamp = new Date(sunset).getTime();
 
@@ -333,13 +334,14 @@ const Dashboard: React.FC = () => {
         sunset: new Date(sunsetTimestamp).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
       });
 
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        // Ensure service worker is registered before sending messages
+      // Only check notification permission if we need to send notifications
+      const notificationPermission = await Notification.requestPermission();
+      if (notificationPermission === 'granted') {
         await sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
       }
     } catch (error) {
       console.error('Error fetching location or sun times:', error);
+      setSunTimes({ sunrise: 'Error fetching', sunset: 'Error fetching' });
     }
   };
 
@@ -357,16 +359,13 @@ const Dashboard: React.FC = () => {
 
         // Check permissions and fetch data
         const notificationPermission = localStorage.getItem('notificationPermission');
-        const locationPermission = localStorage.getItem('locationPermission');
         const lastRequestedAt = localStorage.getItem('permissionsLastRequestedAt');
 
-        if (notificationPermission === 'granted' && locationPermission === 'granted') {
-          fetchSunriseSunsetData();
-          return;
-        }
+        // Always fetch data since we're using hardcoded location
+        fetchSunriseSunsetData();
 
-        // If permissions were never requested, show dialog
-        if (!lastRequestedAt) {
+        // Show permission dialog for notifications if needed
+        if (!lastRequestedAt || !notificationPermission) {
           setShowPermissionDialog(true);
           return;
         }
@@ -394,15 +393,15 @@ const Dashboard: React.FC = () => {
       localStorage.setItem('notificationPermission', notificationResult);
 
       // Request location permission
-      try {
-        await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-        localStorage.setItem('locationPermission', 'granted');
-      } catch (error) {
-        console.log('Location permission denied or error:', error);
-        localStorage.setItem('locationPermission', 'denied');
-      }
+      // try {
+      //   await new Promise((resolve, reject) => {
+      //     navigator.geolocation.getCurrentPosition(resolve, reject);
+      //   });
+      //   localStorage.setItem('locationPermission', 'granted');
+      // } catch (error) {
+      //   console.log('Location permission denied or error:', error);
+      //   localStorage.setItem('locationPermission', 'denied');
+      // }
 
       // Store the timestamp of when permissions were requested
       localStorage.setItem('permissionsLastRequestedAt', new Date().toISOString());
@@ -422,10 +421,10 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center bg-red-500">
       <PermissionDialog isOpen={showPermissionDialog} onClose={handlePermissionClose} onAccept={handlePermissionAccept} />
       <div
-        className="w-full h-full max-w-lg relative"
+        className="w-full h-full max-w-lg relative bg-red-500"
         style={{
           background: '#532C16',
           backgroundImage: `url(${backgroundpattern})`,
@@ -453,12 +452,10 @@ const Dashboard: React.FC = () => {
               <p className="text-sm mt-2 text-[#A47B64]">
                 {location ? (
                   <>
-                    Latitude: {location.latitude.toFixed(4)}
-                    <br />
-                    Longitude: {location.longitude.toFixed(4)}
+                    {location.city}, {location.stateCode}, {location.country}
                   </>
                 ) : (
-                  'Fetching location...'
+                  ''
                 )}
               </p>
             </div>
