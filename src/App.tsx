@@ -78,7 +78,8 @@ function App() {
           <Route
             path="/"
             element={
-              user ? onboardingCompleted ? <Navigate to="/dashboard" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" />
+              // user ? onboardingCompleted ? <Navigate to="/dashboard" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" /> // Original
+              user ? onboardingCompleted ? <Navigate to="/landing" /> : <Navigate to="/onboarding" /> : <Navigate to="/signin" />
             }
           />
           <Route path="/landing" element={<Landing />} />

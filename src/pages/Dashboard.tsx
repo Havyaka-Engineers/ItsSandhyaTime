@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 // import { Block } from 'konsta/react';
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
-import { VISHNU_SMARANA } from '../data/lessons/VISHNU_SMARANA';
 import { calculateTotalDuration } from '../utils/durationCalculator';
 import PermissionDialog from '../components/PermissionDialog';
 import logo from '../assets/SandhyaTime-Logo.svg';
@@ -12,6 +11,33 @@ import sunrise from '../assets/sunrise.svg';
 import sunset from '../assets/sunset.svg';
 import start_button from '../assets/start_button.svg';
 import SignOutButton from '../components/SignOutButton';
+import { VISHNU_SMARANA } from '../data/lessons/VISHNU_SMARANA';
+import { ACHAMANA } from '../data/lessons/ACHAMANA';
+import { BHASMADHARANE } from '../data/lessons/BHASMADHARANE';
+import { SANKALPA_PRATAH } from '../data/lessons/SANKALPA_PRATAH';
+import { SANKALPA_SAYAM } from '../data/lessons/SANKALPA_SAYAM';
+import { MANTRACHAMANA_PRATAH } from '../data/lessons/MANTRACHAMANA_PRATAH';
+import { MARJANA } from '../data/lessons/MARJANA';
+import { MANTRACHAMANA_SAYAM } from '../data/lessons/MANTRACHAMANA_SAYAM';
+import { PUNAR_MARJANA } from '../data/lessons/PUNAR_MARJANA';
+import { ARGHYA_PRATAH } from '../data/lessons/ARGHYA_PRATAH';
+import { ARGHYA_SAYAM } from '../data/lessons/ARGHYA_SAYAM';
+import { GAYATRI_JAPA } from '../data/lessons/GAYATRI_JAPA';
+import { ABHIVADANA_VASISHTA } from '../data/lessons/ABHIVADANA_VASISHTA';
+import { ABHIVADANA_VISHWAMITRA } from '../data/lessons/ABHIVADANA_VISHWAMITRA';
+import { ASHTAKSHARI_PANCHAKSHARI_KARMA_SAMARPANAM } from '../data/lessons/ASHTAKSHARI_PANCHAKSHARI_KARMA_SAMARPANAM';
+import { DVIRACHAMANA } from '../data/lessons/DVIRACHAMANA';
+import { PANCHAKSHARI_JAPA } from '../data/lessons/PANCHAKSHARI_JAPA';
+import { ASHTAKSHARI_JAPA } from '../data/lessons/ASHTAKSHARI_JAPA';
+import { ASHTAKSHAI_PANCHAKSHARI_SANKALPA } from '../data/lessons/ASHTAKSHAI_PANCHAKSHARI_SANKALPA';
+import { SANDHYA_KARMA_SAMARPANAM_SAYAM } from '../data/lessons/SANDHYA_KARMA_SAMARPANAM_SAYAM';
+import { SANDHYA_KARMA_SAMARPANAM_PRATAH } from '../data/lessons/SANDHYA_KARMA_SAMARPANAM_PRATAH';
+import { ABHIVADANA_JAMADAGNI } from '../data/lessons/ABHIVADANA_JAMADAGNI';
+import { ABHIVADANA_GOUTAMA } from '../data/lessons/ABHIVADANA_GOUTAMA';
+import { ABHIVADANA_BHARADWAJA } from '../data/lessons/ABHIVADANA_BHARADWAJA';
+import { ABHIVADANA_KASHYAPA } from '../data/lessons/ABHIVADANA_KASHYAPA';
+import { ABHIVADANA_ANGEERASA } from '../data/lessons/ABHIVADANA_ANGEERASA';
+import { useUserSettings } from '../contexts/UserSettingsContext';
 
 // Define types
 type Location = {
@@ -176,24 +202,24 @@ const fetchAndSendSunTimes = async () => {
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { userSettings } = useUserSettings();
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
-  const redirect = true;
+  // const redirect = true;
 
-  console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
+  // console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
 
-  useEffect(() => {
-    if (import.meta.env.VITE_NODE_ENV === 'production') {
-      console.log('Redirecting to landing page...');
-      navigate('/landing', { replace: true });
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (import.meta.env.VITE_NODE_ENV === 'production') {
+  //     navigate('/landing', { replace: true });
+  //   }
+  // }, [navigate]);
 
-  if (import.meta.env.NODE_ENV === 'production' && redirect) {
-    console.log('Rendering redirect message...');
-    return <p>Redirecting...</p>;
-  }
+  // if (import.meta.env.NODE_ENV === 'production' && redirect) {
+  //   console.log('Rendering redirect message...');
+  //   return <p>Redirecting...</p>;
+  // }
 
   // Call this function daily or when the app initializes
   useEffect(() => {
@@ -225,6 +251,51 @@ const Dashboard: React.FC = () => {
     console.log('settings', settings);
     const lessons: Lesson[] = [];
     lessons.push(VISHNU_SMARANA);
+    lessons.push(ACHAMANA);
+    lessons.push(BHASMADHARANE);
+    lessons.push(settings.sandhyaTime === 'pratah' ? SANKALPA_PRATAH : SANKALPA_SAYAM);
+    lessons.push(MARJANA);
+    lessons.push(settings.sandhyaTime === 'pratah' ? MANTRACHAMANA_PRATAH : MANTRACHAMANA_SAYAM);
+    lessons.push(PUNAR_MARJANA);
+    lessons.push(settings.sandhyaTime === 'pratah' ? ARGHYA_PRATAH : ARGHYA_SAYAM);
+    lessons.push(GAYATRI_JAPA);
+
+    // Add the appropriate ABHIVADANA lesson based on gotra
+    switch (userSettings?.gotra?.toLowerCase()) {
+      case 'kashyapa':
+        lessons.push(ABHIVADANA_KASHYAPA);
+        break;
+      case 'vasishta':
+        lessons.push(ABHIVADANA_VASISHTA);
+        break;
+      case 'vishwamitra':
+        lessons.push(ABHIVADANA_VISHWAMITRA);
+        break;
+      case 'bharadwaja':
+        lessons.push(ABHIVADANA_BHARADWAJA);
+        break;
+      case 'goutama':
+        lessons.push(ABHIVADANA_GOUTAMA);
+        break;
+      case 'angeerasa':
+        lessons.push(ABHIVADANA_ANGEERASA);
+        break;
+      case 'jamadagni':
+        lessons.push(ABHIVADANA_JAMADAGNI);
+        break;
+      default:
+        // If no gotra is set or it's unknown, default to Kashyapa
+        // You might want to handle this differently based on your requirements
+        lessons.push(ABHIVADANA_KASHYAPA);
+        break;
+    }
+
+    lessons.push(settings.sandhyaTime === 'pratah' ? SANDHYA_KARMA_SAMARPANAM_PRATAH : SANDHYA_KARMA_SAMARPANAM_SAYAM);
+    lessons.push(ASHTAKSHAI_PANCHAKSHARI_SANKALPA);
+    lessons.push(ASHTAKSHARI_JAPA);
+    lessons.push(PANCHAKSHARI_JAPA);
+    lessons.push(ASHTAKSHARI_PANCHAKSHARI_KARMA_SAMARPANAM);
+    lessons.push(DVIRACHAMANA);
     return lessons;
   };
 
