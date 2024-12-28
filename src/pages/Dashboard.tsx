@@ -330,8 +330,22 @@ const Dashboard: React.FC = () => {
       const sunsetTimestamp = new Date(sunset).getTime();
 
       setSunTimes({
-        sunrise: new Date(sunriseTimestamp).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
-        sunset: new Date(sunsetTimestamp).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        sunrise: new Date(sunriseTimestamp)
+          .toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true, // Ensures 12-hour format with AM/PM
+          })
+          .toUpperCase(),
+        sunset: new Date(sunsetTimestamp)
+          .toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true, // Ensures 12-hour format with AM/PM
+          })
+          .toUpperCase(),
       });
 
       // Only check notification permission if we need to send notifications
@@ -420,6 +434,7 @@ const Dashboard: React.FC = () => {
     localStorage.setItem('permissionsLastRequestedAt', new Date().toISOString());
   };
 
+  console.log(location, 'Location');
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-red-500">
       <PermissionDialog isOpen={showPermissionDialog} onClose={handlePermissionClose} onAccept={handlePermissionAccept} />
@@ -436,7 +451,9 @@ const Dashboard: React.FC = () => {
         {/* Header */}
         <div className="bg-[#6F3F24] text-white flex items-center justify-between shadow-md p-4">
           <img src={logo} alt="Logo" className="w-12 h-12 ml-4" />
-          <h1 className="text-lg font-bold">Sandhya Time</h1>
+          <h1 className="text-lg font-bold font-otomanopee" style={{ fontFamily: 'Otomanopee' }}>
+            It's Sandhya Time!
+          </h1>
           <div>{''}</div>
           <SignOutButton />
         </div>
@@ -444,22 +461,31 @@ const Dashboard: React.FC = () => {
         {/* Location and Time Details */}
         <div className=" bg-[#602F14] text-white shadow-md">
           <div className="flex justify-between items-center p-4">
-            <p className="text-sm font-semibold">Today</p>
+            {/* <p className="text-sm font-semibold">Today</p> */}
+            <div>{''}</div>
             <div className="flex flex-col items-center justify-center">
               <p className="text-sm">
-                {sunTimes.sunrise || '--'} / {new Date().toLocaleDateString()}
+                {sunTimes.sunrise || '--'} /{' '}
+                {new Date().toLocaleDateString('en-US', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  weekday: 'long',
+                })}
               </p>
               <p className="text-sm mt-2 text-[#A47B64]">
                 {location ? (
                   <>
-                    {location.city}, {location.stateCode}, {location.country}
+                    {/* {location.city}, {location.stateCode}, {location.country} */}
+                    Bangalore, KA
                   </>
                 ) : (
                   ''
                 )}
               </p>
             </div>
-            <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button>
+            {/* <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button> */}
+            <div>{''}</div>
           </div>
         </div>
 

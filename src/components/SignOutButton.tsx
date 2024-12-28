@@ -26,7 +26,7 @@ function SignOutButton() {
 
   return (
     <div>
-      <BiLogOut onClick={signOut} />
+      <BiLogOut size={25} onClick={signOut} />
     </div>
   );
 }
