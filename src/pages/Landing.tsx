@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background-pattern.svg';
 
 const calculateTimeLeft = () => {
-  const launchDate = new Date('2024-12-27T00:00:00');
+  const launchDate = new Date('2025-01-14T00:00:00');
   const difference = launchDate.getTime() - new Date().getTime();
 
   if (difference <= 0) {

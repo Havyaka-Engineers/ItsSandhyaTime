@@ -72,7 +72,7 @@ function App() {
   }
 
   return (
-    <KonstaApp theme="material" dark>
+    <KonstaApp theme="material">
       <Router>
         <Routes>
           <Route
