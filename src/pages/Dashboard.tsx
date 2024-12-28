@@ -52,14 +52,10 @@ type SunTimes = {
 
 // Function to get user's location using Geolocation API
 const getUserLocation = async (): Promise<Location> => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        resolve({ latitude, longitude });
-      },
-      (error) => reject(error),
-    );
+  // Hardcoded Bangalore coordinates
+  return Promise.resolve({
+    latitude: 12.9716, // Bangalore latitude
+    longitude: 77.5946, // Bangalore longitude
   });
 };
 
@@ -81,54 +77,30 @@ const getSunriseSunset = async (latitude: number, longitude: number): Promise<Su
 
 const sendTimesToServiceWorker = async (sunriseTimestamp: number, sunsetTimestamp: number) => {
   try {
-    // Wait for service worker registration
-    const registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker ready state:', {
-      active: !!registration.active,
-      installing: !!registration.installing,
-      waiting: !!registration.waiting,
-    });
-
-    if (!registration.active) {
-      throw new Error('Service Worker is not active');
+    // Get existing registration instead of waiting for ready state
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration?.active) {
+      console.log('Service Worker not ready, storing times locally');
+      // Store times in localStorage as fallback
+      localStorage.setItem(
+        'sunTimes',
+        JSON.stringify({
+          sunrise: sunriseTimestamp,
+          sunset: sunsetTimestamp,
+          timestamp: Date.now(),
+        }),
+      );
+      return;
     }
 
-    // Create a message channel
-    const messageChannel = new MessageChannel();
-
-    // Create a promise to wait for the response
-    const responsePromise = new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        messageChannel.port1.onmessage = null;
-        reject(new Error('Timeout waiting for service worker response'));
-      }, 5000);
-
-      messageChannel.port1.onmessage = (event) => {
-        console.log('Received response from Service Worker:', event.data);
-        clearTimeout(timeoutId);
-        if (event.data.error) {
-          reject(new Error(event.data.error));
-        } else {
-          resolve(event.data);
-        }
-      };
-    });
-
-    // Send the message with the port
-    const message = {
+    // Send message without waiting for response
+    registration.active.postMessage({
       type: 'SET_SUN_TIMES',
       sunrise: sunriseTimestamp,
       sunset: sunsetTimestamp,
-    };
-    console.log('Sending message to Service Worker:', message);
-
-    registration.active.postMessage(message, [messageChannel.port2]);
-
-    // Wait for the response
-    await responsePromise;
-    console.log('Successfully received response from Service Worker');
+    });
   } catch (error) {
-    console.error('Error sending message to Service Worker:', error);
+    console.error('Error communicating with Service Worker:', error);
   }
 };
 
@@ -196,7 +168,7 @@ const fetchAndSendSunTimes = async () => {
 
     await sendTimesToServiceWorker(sunriseTimestamp, sunsetTimestamp);
   } catch (error) {
-    console.error('Error fetching or sending sun times:', error);
+    console.error('Error fetching sun times:', error);
   }
 };
 
@@ -223,10 +195,32 @@ const Dashboard: React.FC = () => {
 
   // Call this function daily or when the app initializes
   useEffect(() => {
-    fetchAndSendSunTimes();
-    const interval = setInterval(fetchAndSendSunTimes, 24 * 60 * 60 * 1000); // Every 24 hours
+    let mounted = true;
 
-    return () => clearInterval(interval);
+    const initializeApp = async () => {
+      try {
+        // Start fetching sun times immediately
+        fetchAndSendSunTimes();
+
+        // Register service worker in the background
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('/sw.js');
+          console.log('Service Worker registered:', registration);
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+      }
+    };
+
+    initializeApp();
+
+    // Set up interval for daily updates
+    const interval = setInterval(fetchAndSendSunTimes, 24 * 60 * 60 * 1000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   // Initialize session settings

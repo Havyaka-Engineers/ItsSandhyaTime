@@ -41,64 +41,22 @@ self.addEventListener('message', async (event) => {
   // Handle SET_SUN_TIMES message
   if (event.data?.type === 'SET_SUN_TIMES') {
     const { sunrise, sunset } = event.data;
-    console.log('[Service Worker] Processing sun times:', { sunrise, sunset });
-
-    try {
-      // Save the times in IndexedDB for persistence
-      await saveSunTimesToIndexedDB({ sunrise, sunset });
-      console.log('[Service Worker] Successfully saved sun times to IndexedDB');
-
-      // Schedule notifications
-      await scheduleNotifications(sunrise, sunset);
-      console.log('[Service Worker] Successfully scheduled notifications');
-
-      // Send response through the MessageChannel port if available
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({ success: true });
-        console.log('[Service Worker] Sent success response through MessageChannel');
-      } else if (event.source) {
-        // Fallback to client.postMessage if no MessageChannel
-        event.source.postMessage({
-          type: 'SUN_TIMES_RECEIVED',
-          success: true,
-        });
-        console.log('[Service Worker] Sent success response through client.postMessage');
-      } else {
-        console.warn('[Service Worker] No way to send response back to client');
-      }
-    } catch (error) {
-      console.error('[Service Worker] Error processing message:', error);
-      const errorResponse = {
-        success: false,
-        error: error.message || 'Failed to process sun times',
-      };
-
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage(errorResponse);
-      } else if (event.source) {
-        event.source.postMessage({
-          type: 'SUN_TIMES_RECEIVED',
-          ...errorResponse,
-        });
-      }
-    }
+    
+    // Process in the background without blocking
+    Promise.all([
+      saveSunTimesToIndexedDB({ sunrise, sunset }),
+      scheduleNotifications(sunrise, sunset)
+    ]).catch(error => {
+      console.error('[Service Worker] Error processing sun times:', error);
+    });
   }
   // Handle SHOW_NOTIFICATION message for immediate notifications
   else if (event.data?.type === 'SHOW_NOTIFICATION') {
-    const { title, body, data } = event.data;
     try {
+      const { title, body, data } = event.data;
       await showImmediateNotification(title, body, data);
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({ success: true });
-      }
     } catch (error) {
-      console.error('[Service Worker] Error showing immediate notification:', error);
-      if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({
-          success: false,
-          error: error.message,
-        });
-      }
+      console.error('[Service Worker] Error showing notification:', error);
     }
   }
   // Handle other known message types
@@ -111,23 +69,67 @@ self.addEventListener('message', async (event) => {
 
 // Function to schedule notifications
 const scheduleNotifications = async (sunrise, sunset) => {
-  console.log('[Service Worker] Scheduling notifications for:', { sunrise, sunset });
   const now = Date.now();
+  let sunriseTime = sunrise;
+  let sunsetTime = sunset;
 
-  // Schedule sunrise notification if the current time is before sunrise
-  if (now < sunrise) {
-    await scheduleNotification('Sunrise Reminder', 'The sun is rising! Start your day with positivity 🌞', sunrise, 'sunrise-today');
-  } else {
-    console.log('[Service Worker] Sunrise time is in the past:', new Date(sunrise).toLocaleString());
-  }
+  // Adjust times if needed
+  while (now >= sunriseTime) sunriseTime += 86400000; // 24 hours in milliseconds
+  while (now >= sunsetTime) sunsetTime += 86400000;
 
-  // Schedule sunset notification if the current time is before sunset
-  if (now < sunset) {
-    await scheduleNotification('Sunset Reminder', 'The sun is setting! Reflect on your day 🌅', sunset, 'sunset-today');
-  } else {
-    console.log('[Service Worker] Sunset time is in the past:', new Date(sunset).toLocaleString());
-  }
-}
+  // Schedule sunrise notification
+  setTimeout(async () => {
+    try {
+      await self.registration.showNotification('Sunrise Sandhya Time', {
+        body: 'Time for your morning Sandhya practice 🌅',
+        icon: '/app_icon.png',
+        tag: 'sunrise-notification',
+        requireInteraction: true,
+        vibrate: [200, 100, 200],
+        actions: [
+          {
+            action: 'open',
+            title: 'Start Practice'
+          },
+          {
+            action: 'dismiss',
+            title: 'Dismiss'
+          }
+        ]
+      });
+      
+      // Schedule next day's sunrise notification
+      scheduleNotifications(sunriseTime + 86400000, sunsetTime + 86400000);
+    } catch (error) {
+      console.error('[Service Worker] Error showing sunrise notification:', error);
+    }
+  }, sunriseTime - now);
+
+  // Schedule sunset notification
+  setTimeout(async () => {
+    try {
+      await self.registration.showNotification('Sunset Sandhya Time', {
+        body: 'Time for your evening Sandhya practice 🌇',
+        icon: '/app_icon.png',
+        tag: 'sunset-notification',
+        requireInteraction: true,
+        vibrate: [200, 100, 200],
+        actions: [
+          {
+            action: 'open',
+            title: 'Start Practice'
+          },
+          {
+            action: 'dismiss',
+            title: 'Dismiss'
+          }
+        ]
+      });
+    } catch (error) {
+      console.error('[Service Worker] Error showing sunset notification:', error);
+    }
+  }, sunsetTime - now);
+};
 
 // Function to schedule a single notification
 const scheduleNotification = async (title, body, timestamp) => {
@@ -219,29 +221,29 @@ const openIndexedDB = () => {
 
 // Function to show an immediate notification
 const showImmediateNotification = async (title, body, data = {}) => {
-  console.log('[Service Worker] Showing immediate notification:', { title, body, data });
   try {
     await self.registration.showNotification(title, {
       body,
       icon: '/app_icon.png',
-      tag: title,
+      badge: '/app_icon.png',
+      tag: data.type || 'default',
       requireInteraction: true,
       vibrate: [200, 100, 200],
-      data,
       actions: [
         {
           action: 'open',
-          title: 'Open App',
+          title: 'Start Practice'
         },
         {
-          action: 'close',
-          title: 'Dismiss',
-        },
+          action: 'dismiss',
+          title: 'Dismiss'
+        }
       ],
+      data
     });
     console.log(`[Service Worker] Immediate notification shown: ${title}`);
   } catch (error) {
-    console.error(`[Service Worker] Error showing immediate notification: ${error}`);
+    console.error(`[Service Worker] Error showing immediate notification:`, error);
     throw error;
   }
 };
