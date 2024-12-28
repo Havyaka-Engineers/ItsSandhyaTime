@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Block, Button, List, ListInput, Radio, ListItem } from 'konsta/react';
+import { Block, Button, List, ListInput } from 'konsta/react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase.config';
 import { userService } from '../services/userService';
-import { UserPreferences, VocalPitch } from '../types/UserProfile';
+import { UserPreferences } from '../types/UserProfile';
 import backgroundPattern2 from '../assets/background-pattern2.svg';
 import sandhyaTimeLogo from '../assets/SandhyaTime-Logo.svg';
-import VoicePlay from '../assets/VoicePlay.svg';
+// import VoicePlay from '../assets/VoicePlay.svg';
 import { gotras } from '../types/gotra';
 
 function UserSettings() {
