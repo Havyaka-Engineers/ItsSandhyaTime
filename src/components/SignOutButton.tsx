@@ -1,7 +1,8 @@
 import { auth } from '../firebase.config';
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { BiLogOut } from 'react-icons/bi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
+import logoutIcon from '../../public/logout.svg';
 
 function SignOutButton() {
   const [signedIn, setSignedIn] = useState(true);
@@ -26,7 +27,7 @@ function SignOutButton() {
 
   return (
     <div>
-      <BiLogOut onClick={signOut} />
+      <img src={logoutIcon} className="h-6 w-auto" onClick={signOut} />
     </div>
   );
 }

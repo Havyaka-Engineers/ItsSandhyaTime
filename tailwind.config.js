@@ -7,7 +7,11 @@ module.exports = konstaConfig({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['InterVariable', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 });

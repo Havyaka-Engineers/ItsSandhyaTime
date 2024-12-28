@@ -9,6 +9,7 @@ import logo from '../assets/SandhyaTime-Logo.svg';
 import backgroundpattern from '../assets/background-pattern2.svg';
 import sunrise from '../assets/sunrise.svg';
 import sunset from '../assets/sunset.svg';
+import heading from '../../public/its.svg';
 import start_button from '../assets/start_button.svg';
 import SignOutButton from '../components/SignOutButton';
 import { VISHNU_SMARANA } from '../data/lessons/VISHNU_SMARANA';
@@ -38,6 +39,7 @@ import { ABHIVADANA_BHARADWAJA } from '../data/lessons/ABHIVADANA_BHARADWAJA';
 import { ABHIVADANA_KASHYAPA } from '../data/lessons/ABHIVADANA_KASHYAPA';
 import { ABHIVADANA_ANGEERASA } from '../data/lessons/ABHIVADANA_ANGEERASA';
 import { useUserSettings } from '../contexts/UserSettingsContext';
+import { FiMapPin } from 'react-icons/fi';
 
 // Define types
 type Location = {
@@ -59,7 +61,7 @@ const getUserLocation = async (): Promise<Location> => {
   return {
     latitude: 12.9716,
     longitude: 77.5946,
-    city: 'Bangalore',
+    city: 'test',
     stateCode: 'KA',
     country: 'India',
   };
@@ -436,30 +438,36 @@ const Dashboard: React.FC = () => {
         {/* Header */}
         <div className="bg-[#6F3F24] text-white flex items-center justify-between shadow-md p-4">
           <img src={logo} alt="Logo" className="w-12 h-12 ml-4" />
-          <h1 className="text-lg font-bold">Sandhya Time</h1>
+          <img src={heading} alt="It's Sandhyatime" />
           <div>{''}</div>
           <SignOutButton />
         </div>
 
         {/* Location and Time Details */}
         <div className=" bg-[#602F14] text-white shadow-md">
-          <div className="flex justify-between items-center p-4">
-            <p className="text-sm font-semibold">Today</p>
+          <div className="flex justify-center items-center p-4">
+            {/* <p className="text-sm font-semibold">Today</p> */}
             <div className="flex flex-col items-center justify-center">
               <p className="text-sm">
-                {sunTimes.sunrise || '--'} / {new Date().toLocaleDateString()}
+                {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} /{' '}
+                {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} /{' '}
+                {new Date().toLocaleDateString('en-US', { weekday: 'long' })}
               </p>
               <p className="text-sm mt-2 text-[#A47B64]">
                 {location ? (
-                  <>
-                    {location.city}, {location.stateCode}, {location.country}
-                  </>
+                  <div className="flex items-center justify-center gap-1">
+                    <FiMapPin className="inline-block" />
+                    {/* {location.city}, {location.stateCode}, {location.country} */}
+                    <p>
+                      {location.city}, {location.stateCode}
+                    </p>
+                  </div>
                 ) : (
                   ''
                 )}
               </p>
             </div>
-            <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button>
+            {/* <button className="text-sm bg-[#6F3F24] text-white px-2 py-1 rounded shadow-md">Change</button> */}
           </div>
         </div>
 
