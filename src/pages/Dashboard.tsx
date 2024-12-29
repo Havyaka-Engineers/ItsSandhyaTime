@@ -314,12 +314,12 @@ const Dashboard: React.FC = () => {
   //   navigate('/review-settings');
   // };
 
-  const handleSandhyaSessionClick = () => {
-    showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
-      type: 'session_start',
-    });
-    navigate('/player', { state: { sessionSettings } });
-  };
+  // const handleSandhyaSessionClick = () => {
+  //   showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
+  //     type: 'session_start',
+  //   });
+  //   navigate('/player', { state: { sessionSettings } });
+  // };
 
   // Function to fetch location and sunrise/sunset data
   const fetchSunriseSunsetData = async () => {
