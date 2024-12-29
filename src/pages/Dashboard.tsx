@@ -135,59 +135,59 @@ const sendTimesToServiceWorker = async (sunriseTimestamp: number, sunsetTimestam
   }
 };
 
-const showNotification = async (title: string, body: string, data: any = {}) => {
-  try {
-    // Wait for service worker registration
-    const registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker ready state:', {
-      active: !!registration.active,
-      installing: !!registration.installing,
-      waiting: !!registration.waiting,
-    });
+// const showNotification = async (title: string, body: string, data: any = {}) => {
+//   try {
+//     // Wait for service worker registration
+//     const registration = await navigator.serviceWorker.ready;
+//     console.log('Service Worker ready state:', {
+//       active: !!registration.active,
+//       installing: !!registration.installing,
+//       waiting: !!registration.waiting,
+//     });
 
-    if (!registration.active) {
-      throw new Error('Service Worker is not active');
-    }
+//     if (!registration.active) {
+//       throw new Error('Service Worker is not active');
+//     }
 
-    // Create a message channel
-    const messageChannel = new MessageChannel();
+//     // Create a message channel
+//     const messageChannel = new MessageChannel();
 
-    // Create a promise to wait for the response
-    const responsePromise = new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        messageChannel.port1.onmessage = null;
-        reject(new Error('Timeout waiting for service worker response'));
-      }, 5000);
+//     // Create a promise to wait for the response
+//     const responsePromise = new Promise((resolve, reject) => {
+//       const timeoutId = setTimeout(() => {
+//         messageChannel.port1.onmessage = null;
+//         reject(new Error('Timeout waiting for service worker response'));
+//       }, 5000);
 
-      messageChannel.port1.onmessage = (event) => {
-        console.log('Received response from Service Worker:', event.data);
-        clearTimeout(timeoutId);
-        if (event.data.error) {
-          reject(new Error(event.data.error));
-        } else {
-          resolve(event.data);
-        }
-      };
-    });
+//       messageChannel.port1.onmessage = (event) => {
+//         console.log('Received response from Service Worker:', event.data);
+//         clearTimeout(timeoutId);
+//         if (event.data.error) {
+//           reject(new Error(event.data.error));
+//         } else {
+//           resolve(event.data);
+//         }
+//       };
+//     });
 
-    // Send the message with the port
-    const message = {
-      type: 'SHOW_NOTIFICATION',
-      title,
-      body,
-      data,
-    };
-    console.log('Sending notification message to Service Worker:', message);
+//     // Send the message with the port
+//     const message = {
+//       type: 'SHOW_NOTIFICATION',
+//       title,
+//       body,
+//       data,
+//     };
+//     console.log('Sending notification message to Service Worker:', message);
 
-    registration.active.postMessage(message, [messageChannel.port2]);
+//     registration.active.postMessage(message, [messageChannel.port2]);
 
-    // Wait for the response
-    await responsePromise;
-    console.log('Successfully showed notification');
-  } catch (error) {
-    console.error('Error showing notification:', error);
-  }
-};
+//     // Wait for the response
+//     await responsePromise;
+//     console.log('Successfully showed notification');
+//   } catch (error) {
+//     console.error('Error showing notification:', error);
+//   }
+// };
 
 const fetchAndSendSunTimes = async () => {
   try {
@@ -204,7 +204,7 @@ const fetchAndSendSunTimes = async () => {
 };
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { userSettings } = useUserSettings();
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
