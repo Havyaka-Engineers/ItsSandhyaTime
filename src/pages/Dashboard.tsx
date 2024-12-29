@@ -38,6 +38,7 @@ import { ABHIVADANA_BHARADWAJA } from '../data/lessons/ABHIVADANA_BHARADWAJA';
 import { ABHIVADANA_KASHYAPA } from '../data/lessons/ABHIVADANA_KASHYAPA';
 import { ABHIVADANA_ANGEERASA } from '../data/lessons/ABHIVADANA_ANGEERASA';
 import { useUserSettings } from '../contexts/UserSettingsContext';
+import { Dialog } from 'konsta/react';
 
 // Define types
 type Location = {
@@ -208,6 +209,7 @@ const Dashboard: React.FC = () => {
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
   const [showPermissionDialog, setShowPermissionDialog] = useState(false);
+  const [isStartDialogOpen, setIsStartDialogOpen] = useState(false);
   // const redirect = true;
 
   // console.log('VITE_NODE_ENV:', import.meta.env.VITE_NODE_ENV);
@@ -421,10 +423,10 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-red-500">
+    <div className="fixed inset-0 flex items-center justify-center ">
       <PermissionDialog isOpen={showPermissionDialog} onClose={handlePermissionClose} onAccept={handlePermissionAccept} />
       <div
-        className="w-full h-full max-w-lg relative bg-red-500"
+        className="w-full h-full max-w-lg relative "
         style={{
           background: '#532C16',
           backgroundImage: `url(${backgroundpattern})`,
@@ -473,11 +475,37 @@ const Dashboard: React.FC = () => {
             <div>
               <h2 className="text-2xl font-bold">{sunTimes.sunrise ? sunTimes.sunrise : 'Fetching...'}</h2>
               <p className="text-sm">Sunrise</p>
-              <button className="bg-[#8A2C0D] text-[#8B0000] px-4 py-2 rounded-lg shadow mt-6" onClick={handleSandhyaSessionClick}>
+              <button
+                className="bg-[#8A2C0D] text-[#8B0000] px-4 py-2 rounded-lg shadow mt-6"
+                onClick={() => setIsStartDialogOpen(true)} // Open dialog
+              >
                 <img src={start_button} alt="Logo" className="w-15 h-auto" />
               </button>
             </div>
           </div>
+
+          {/* Start Dialog */}
+          {isStartDialogOpen && (
+            <Dialog
+              opened={isStartDialogOpen}
+              onBackdropClick={() => setIsStartDialogOpen(false)} // Close dialog on backdrop click
+              colors={{ bgIos: 'bg-white', bgMaterial: 'bg-white' }}
+            >
+              <div className="p-4 space-y-4">
+                <p className="text-center text-gray-900">
+                  "The interactive, guided learning of Sandhya Vandana feature will be available on 14-Jan-2025. Stay tuned!"
+                </p>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setIsStartDialogOpen(false)} // Close dialog
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                  >
+                    Ok
+                  </button>
+                </div>
+              </div>
+            </Dialog>
+          )}
 
           {/* Sunset Card */}
           <div className="bg-[#00008B] text-white rounded-lg shadow-md p-6  flex flex-row items-center justify-between">
