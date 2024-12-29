@@ -13,6 +13,7 @@ import UserSettings from './pages/UserSettings';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import Player from './pages/Player';
 import Landing from './pages/Landing';
+import RegisteredUsers from './pages/RegisteredUsers';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -90,6 +91,7 @@ function App() {
           <Route path="/sandhya-player" element={<SandhyaPlayer />} />
           <Route path="/sandhya-session" element={<SandhyaSession />} />
           <Route path="/player" element={<Player />} />
+          <Route path="/registered-users" element={<RegisteredUsers />} />
         </Routes>
       </Router>
     </KonstaApp>
