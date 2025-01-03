@@ -1,22 +1,46 @@
 import { createMachine } from "xstate";
 export const machine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QAUA2BDAnmATgWXQGMALASwDswA6AMVJ1gBcACAZUfUbAGJKAPRgG0ADAF1EoAA4B7WKUalp5CSD6IAjAHZhVAGzCAnACYD6gKwAWdeoDMZgwBoQmREZtUzmi0fUAOTWYAvsFO5NIQcCpoWLgEJBRgKjJyCkoqaggAtDa6VEbC3kZmtjYGlga+Ti5ZZmZU3p6+6kUhINHY+ERklLT0TGwcXEmy8orKSKoa6lSaZZpevrr6FmbCRlWuRh5ePv5BgU7tsV0JVKxghEoQA5yJE8mjaRMZJrma+l42+V7CXhsIRi2nm8fgCwWCQA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QAUA2BDAnmATgWXQGMALASwDswA6QnMdAFzADVSBbMAezS1wGJmASQAiAUQDyAfWQAZAIIBNUQCVJy0XOEKA2gAYAuolAAHTrFINSnckZAAPRAEYArAGYqzgJzefv7wHYAGhBMJwAOACYAXyjgnmx8IjJKKgAzMAYSCigZOFhrPhlRAGVi8QA5SQAxUQAVAGEACVFhPUMkEFNzS2tbBwRXTyCQxFcANgAWGLiMBIIslONZ7NzYfPJCkrLK0XKxVsd2kzMLKxsO-sddVzCqMNcHx6eH4NCECednaZB43Hnk6hLLArPIFIqlCqSXb7Nq2LqnXoXRCeCbDN7jKaxH6zP5JCiA5bkHKgjblUQADVqknB21hHXhPXOoH6Y10zleo0m31+iQWBOBRNW6z4yHUzGpWwqdOO3TOfUQrI5Ay533InAgcFsPP++LhJ0Z8oQjgiSuN3JxvIBNDojBY7C4PL1ssRzKcY1cSs8unNvEt+LSGQWxLWLs6+rlSKN-nZIwQEX80Sx2rxi0JwfWToRTPsiAmERNsY+mJmvp1KTA5Ag2WKeQjMqzhquKKVzgmYxiMSAA */
     id: "PlayerMachine",
-    initial: "First State",
+    initial: "createVimeoPlayer",
     states: {
-      "First State": {
+      createVimeoPlayer: {
         on: {
-          next: [
-            {
-              target: "Second State",
-              actions: [],
-              meta: {},
-            },
-          ],
+          VIDEO_PLAYER_READY: {
+            target: "fetchingLesson",
+            actions: [],
+            meta: {},
+          }
         },
       },
-      "Second State": {},
+
+      fetchingLesson: {
+        on: {
+          LESSON_FETCHED: "playingLesson"
+        }
+      },
+
+      playingLesson: {
+        on: {
+          LESSON_ENDED: [{
+            target: "endingSession",
+            cond: "hasMoreLessons"
+          }, "fetchingLesson"],
+
+          NEXT_LESSON: {
+            target: "fetchingLesson",
+            cond: "hasMoreLessons"
+          },
+
+          PREV_LESSON: {
+            target: "fetchingLesson",
+            cond: "hasPrevLessons"
+          }
+        }
+      },
+
+      endingSession: {}
     },
     types: { events: {} as { type: "next" } },
   },
