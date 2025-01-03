@@ -294,9 +294,7 @@ export const SandhyaPlayerMachine = setup({
   },
 }).createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5SwIYDsIAsCeKAKANitmAE4CyKAxpgJZpgB0tEBYAxAMoCinnAkgHkAcgH1OAFQCCAJQncAIgG0ADAF1EoAA4B7WLQAutHWk0gAHogBMVgKyMAnADY7KgOwOAzG9tOAjE4ALAA0INiIfoF+jLY+KpF+Pt7uAL4poagYOPhEJBTUdAyMBDooEPRQAGosYDqExGTslfwK3IKieAAyUgCa3DKiMtxSCj2qGkgguvpGJmaWCAAcboGMTsu2tn4qDm42Vg6h4QgBq4EqF5GBbn7eflZOaRnoWLj1eZQ09EwlZRWdcFgJnYnV4nBEok6ghGinGZmmhmMpkmC22nicMXu608iz8DhUTl8R0Qni8jECDkSthxKk2O0e6RAmVeOQa+S+RS0uX+gOBeCkAFUeHDJgjZsjQAtAk4MW4NqSHIsnA4rOinMSEBTPIxPLYLstAp4VIFFibbE8mS9su8yJ9CkwucQebAgWgQWCIdxhK1lOp4XpEXMUYgDWsNlsdnsbIcwohAobGHjEudqfHvIaLczrblbQVvoxHdhna73XxPd7YX4JtoA+L5iGVmGfBHdvsY8cDotE1E3L2VYsrNdzYys28c+z7QXuWgoACXcDhNwABoSSEe4QimszJH1paN9bN7at6Ma3z2UnJvVbBx6hyZq1jtl2-OF4t8obNQRCtdljd+0W1juwZ7qsB6bEeUYHBqMoqIwKzJospLnLcw7PFkj4fHmnLTrOvJupI3B4KIXo+puUyAUGkqILYiwOIwNh6iaiyxJEiqnio2oeA4zjMb2iwcQE97oaymEcg6OFziWBFESRlbVuR26URY1FuNqfh6rSMqJIstGeBqOLRLY3Hceprj4m4QksjaE4vhJeFcPIMkVsoVjyWKQFUQgsRqRpvj+HKukanYdHnJc8Z7N4HgMmhVnjs+RRsPOaB4CgACusCQOwQycAK5DcGR7lKQsDGOC4eoeN4vinNB6kxBplIONc3EDpZ2ZPlhPx4Sl6WZYuK4-uCf5uRRErKQgJXOK4FU+P4QQavx2qUk4bhON4uzxrYVitRhuZicUXVpRlEDsHgH5CN+oK-gVI27hNZXuF4M3VbGSzcfRMoeNKxpGjpaSMmgOgQHAZijiJu32v6imjQsAC06ovXD21gzZRQsGwkOBtDcZWBqCSJhc8TppSlx3iOD7I-FPylOUM7VEDdTjhjdbAf40RanKSFbC4OMvfcXbbJcUbGg8kRI9ZlPFNTb6jYVWMnIOGIbDsuy9nStinrYZwBCs-G7Bcq1i3FHVTk6M6SUpsu7i4IWVRSOnLEk0GeNEBO0prtE3L9ZPCeLxuJa63VHUzHljYEPPHMsVj0fEpqeFYNweIkhvtXtYAYJAwdFRECuMEr3G9s2tJBc45La3sKh2LRMrDmkQA */
-  entry: () => {
-    console.log('entry SandhyaPlayerMachine');
-  },
+  entry: "inline:sandhyaPlayerMachine#entry[0]",
   context: ({ input }) => ({
     lessons: input.sessionSettings.lessons,
     container: document.createElement('div'), //dummy container
@@ -315,29 +313,18 @@ export const SandhyaPlayerMachine = setup({
   initial: 'idle',
   states: {
     idle: {
-      entry: ({ context }) => {
-        console.log('entry idle state; context:', context);
-      },
+      entry: "inline:sandhyaPlayerMachine.idle#entry[0]",
       on: {
         SESSION_STARTED: {
           target: 'loadingVideoPlayer',
-          actions: assign({
-            container: ({ event }) => event.container,
-          }),
+          actions: "inline:sandhyaPlayerMachine.idle#SESSION_STARTED[-1]#transition[0]",
         },
       },
     },
     loadingVideoPlayer: {
       entry: [
-        () => {
-          console.log('entry loadingVideoPlayer state');
-        },
-        spawnChild('vimeoPlayerActor', {
-          id: 'vimeoPlayerActor',
-          input: ({ context }) => ({
-            container: context.container,
-          }),
-        }),
+        "inline:sandhyaPlayerMachine.loadingVideoPlayer#entry[0]",
+        "inline:sandhyaPlayerMachine.loadingVideoPlayer#entry[1]",
       ],
       on: {
         VIDEO_PLAYER_READY: {
@@ -347,54 +334,22 @@ export const SandhyaPlayerMachine = setup({
     },
     loadingLesson: {
       entry: [
-        ({ context }) => {
-          console.log('entry loadingLesson state; context', context);
-        },
-        assign({
-          currentStepIndex: 0,
-          currentStepPlayCount: 0,
-          // currentLessonLoopCount: 0,
-        }),
-        sendTo('vimeoPlayerActor', ({ context }) => {
-          // Calculate playback speed based on chanting speed
-          const playbackSpeed = (() => {
-            switch (context.chantingSpeed) {
-              case 'slow':
-                return 1.0;
-              case 'regular':
-                return 1.5;
-              case 'fast':
-                return 2.0;
-              default:
-                return 1.0;
-            }
-          })();
-
-          return {
-            type: 'LOAD_VIDEO',
-            videoId: context.lessons[context.currentLessonIndex].videoId,
-            steps: context.lessons[context.currentLessonIndex].steps,
-            //loopCount: context.lessons[context.currentLessonIndex].loopCount,
-            playbackSpeed,
-          };
-        }),
+        "inline:sandhyaPlayerMachine.loadingLesson#entry[0]",
+        "inline:sandhyaPlayerMachine.loadingLesson#entry[1]",
+        "inline:sandhyaPlayerMachine.loadingLesson#entry[2]",
       ],
       on: {
         LESSON_LOADED: 'playingLesson',
       },
     },
     playingLesson: {
-      entry: ({ context }) => {
-        console.log('entry playingLesson state; context:', context);
-      },
+      entry: "inline:sandhyaPlayerMachine.playingLesson#entry[0]",
       on: {
         PAUSE: {
           target: 'lessonPaused',
           actions: [
-            () => {
-              console.log('actions PAUSE');
-            },
-            sendTo('vimeoPlayerActor', { type: 'PAUSE' }),
+            "inline:sandhyaPlayerMachine.playingLesson#PAUSE[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.playingLesson#PAUSE[-1]#transition[1]",
           ],
         },
         LESSON_ENDED: [
@@ -402,39 +357,27 @@ export const SandhyaPlayerMachine = setup({
             target: 'loadingLesson',
             guard: 'hasNextLesson',
             actions: [
-              () => {
-                console.log('actions LESSON_ENDED; guard: hasMoreLessons');
-              },
-              assign({
-                currentLessonIndex: ({ context }) => context.currentLessonIndex + 1,
-              }),
-              { type: 'updateTimeRemaining' },
+              "inline:sandhyaPlayerMachine.playingLesson#LESSON_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#LESSON_ENDED[-1]#transition[1]",
+              { type: "updateTimeRemaining" },
             ],
           },
           {
             target: 'ended',
-            actions: () => {
-              console.log('actions LESSON_ENDED; guard: !hasMoreLessons');
-            },
+            actions: "inline:sandhyaPlayerMachine.playingLesson#LESSON_ENDED[-1]#transition[0]",
           },
         ],
         NEXT_LESSON: {
           target: 'loadingLesson',
           actions: [
-            // sendTo('vimeoPlayerActor', { type: 'PAUSE' }),
-            assign({
-              currentLessonIndex: ({ context }) => context.currentLessonIndex + 1,
-            }),
+            "inline:sandhyaPlayerMachine.playingLesson#NEXT_LESSON[-1]#transition[0]",
           ],
           guard: 'hasNextLesson',
         },
         PREVIOUS_LESSON: {
           target: 'loadingLesson',
           actions: [
-            // sendTo('vimeoPlayerActor', { type: 'PAUSE' }),
-            assign({
-              currentLessonIndex: ({ context }) => context.currentLessonIndex - 1,
-            }),
+            "inline:sandhyaPlayerMachine.playingLesson#PREVIOUS_LESSON[-1]#transition[0]",
           ],
           guard: 'hasPreviousLesson',
         },
@@ -444,14 +387,9 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'isInstructionStep',
             actions: [
-              () => {
-                console.log('actions STEP_ENDED; guard: instruction step');
-              },
-              assign({
-                currentStepIndex: ({ context }) => context.currentStepIndex + 1,
-                currentStepPlayCount: 0,
-              }),
-              { type: 'updateTimeRemaining' },
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[1]",
+              { type: "updateTimeRemaining" },
             ],
           },
           {
@@ -459,14 +397,9 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'isPerformMode',
             actions: [
-              () => {
-                console.log('actions STEP_ENDED; guard: perform mode');
-              },
-              assign({
-                currentStepIndex: ({ context }) => context.currentStepIndex + 1,
-                currentStepPlayCount: 0,
-              }),
-              { type: 'updateTimeRemaining' },
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[1]",
+              { type: "updateTimeRemaining" },
             ],
           },
           {
@@ -474,16 +407,9 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'isFirstRepeatPlay',
             actions: [
-              () => {
-                console.log('actions STEP_ENDED; guard: repeat mode, end of first play');
-              },
-              assign({
-                currentStepPlayCount: ({ context }) => context.currentStepPlayCount + 1,
-              }),
-              sendTo('vimeoPlayerActor', ({ context }) => ({
-                type: 'SEEK_TO',
-                time: context.lessons[context.currentLessonIndex].steps[context.currentStepIndex].startTime,
-              })),
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[1]",
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[2]",
             ],
           },
           {
@@ -491,13 +417,8 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'isSecondRepeatPlay',
             actions: [
-              () => {
-                console.log('actions STEP_ENDED; guard: repeat mode, end of second play');
-              },
-              assign({
-                currentStepIndex: ({ context }) => context.currentStepIndex + 1,
-                currentStepPlayCount: 0,
-              }),
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#STEP_ENDED[-1]#transition[1]",
             ],
           },
         ],
@@ -505,28 +426,16 @@ export const SandhyaPlayerMachine = setup({
           target: 'playingLesson',
           guard: 'hasNextStep',
           actions: [
-            assign({
-              currentStepIndex: ({ context }) => context.currentStepIndex + 1,
-              currentStepPlayCount: 0,
-            }),
-            sendTo('vimeoPlayerActor', ({ context }) => ({
-              type: 'SEEK_TO',
-              time: context.lessons[context.currentLessonIndex].steps[context.currentStepIndex].startTime,
-            })),
+            "inline:sandhyaPlayerMachine.playingLesson#NEXT_STEP[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.playingLesson#NEXT_STEP[-1]#transition[1]",
           ],
         },
         PREVIOUS_STEP: {
           target: 'playingLesson',
           guard: 'hasPreviousStep',
           actions: [
-            assign({
-              currentStepIndex: ({ context }) => context.currentStepIndex - 1,
-              currentStepPlayCount: 0,
-            }),
-            sendTo('vimeoPlayerActor', ({ context }) => ({
-              type: 'SEEK_TO',
-              time: context.lessons[context.currentLessonIndex].steps[context.currentStepIndex].startTime,
-            })),
+            "inline:sandhyaPlayerMachine.playingLesson#PREVIOUS_STEP[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.playingLesson#PREVIOUS_STEP[-1]#transition[1]",
           ],
         },
         LOOP_ENDED: [
@@ -534,92 +443,60 @@ export const SandhyaPlayerMachine = setup({
             target: 'playingLesson',
             guard: 'hasRemainingLoops',
             actions: [
-              // assign({
-              //   currentLessonLoopCount: ({ context }) => context.currentLessonLoopCount + 1,
-              //   currentStepPlayCount: 0,
-              // }),
-              () => {
-                console.log('Loop ended, incrementing lesson loop count');
-              },
-              { type: 'updateTimeRemaining' },
+              "inline:sandhyaPlayerMachine.playingLesson#LOOP_ENDED[-1]#transition[0]",
+              { type: "updateTimeRemaining" },
             ],
           },
           {
             target: 'loadingLesson',
             actions: [
-              () => {
-                console.log('Loop ended, lesson loop count reached, ending lesson');
-              },
-              assign({
-                currentLessonIndex: ({ context }) => context.currentLessonIndex + 1,
-              }),
+              "inline:sandhyaPlayerMachine.playingLesson#LOOP_ENDED[-1]#transition[0]",
+              "inline:sandhyaPlayerMachine.playingLesson#LOOP_ENDED[-1]#transition[1]",
             ],
           },
         ],
       },
     },
     lessonPaused: {
-      entry: ({ context }) => {
-        console.log('entry lessonPaused state; context:', context);
-      },
+      entry: "inline:sandhyaPlayerMachine.lessonPaused#entry[0]",
       on: {
         RESUME: {
           target: 'playingLesson',
           actions: [
-            () => {
-              console.log('actions RESUME');
-            },
-            sendTo('vimeoPlayerActor', { type: 'RESUME' }),
+            "inline:sandhyaPlayerMachine.lessonPaused#RESUME[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.lessonPaused#RESUME[-1]#transition[1]",
           ],
         },
         NEXT_LESSON: {
           target: 'loadingLesson',
-          actions: assign({
-            currentLessonIndex: ({ context }) => context.currentLessonIndex + 1,
-          }),
+          actions: "inline:sandhyaPlayerMachine.lessonPaused#NEXT_LESSON[-1]#transition[0]",
           guard: 'hasNextLesson',
         },
         PREVIOUS_LESSON: {
           target: 'loadingLesson',
-          actions: assign({
-            currentLessonIndex: ({ context }) => context.currentLessonIndex - 1,
-          }),
+          actions: "inline:sandhyaPlayerMachine.lessonPaused#PREVIOUS_LESSON[-1]#transition[0]",
           guard: 'hasPreviousLesson',
         },
         NEXT_STEP: {
           target: 'lessonPaused',
           guard: 'hasNextStep',
           actions: [
-            assign({
-              currentStepIndex: ({ context }) => context.currentStepIndex + 1,
-              currentStepPlayCount: 0,
-            }),
-            sendTo('vimeoPlayerActor', ({ context }) => ({
-              type: 'SEEK_TO',
-              time: context.lessons[context.currentLessonIndex].steps[context.currentStepIndex].startTime,
-            })),
+            "inline:sandhyaPlayerMachine.lessonPaused#NEXT_STEP[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.lessonPaused#NEXT_STEP[-1]#transition[1]",
           ],
         },
         PREVIOUS_STEP: {
           target: 'lessonPaused',
           guard: 'hasPreviousStep',
           actions: [
-            assign({
-              currentStepIndex: ({ context }) => context.currentStepIndex - 1,
-              currentStepPlayCount: 0,
-            }),
-            sendTo('vimeoPlayerActor', ({ context }) => ({
-              type: 'SEEK_TO',
-              time: context.lessons[context.currentLessonIndex].steps[context.currentStepIndex].startTime,
-            })),
+            "inline:sandhyaPlayerMachine.lessonPaused#PREVIOUS_STEP[-1]#transition[0]",
+            "inline:sandhyaPlayerMachine.lessonPaused#PREVIOUS_STEP[-1]#transition[1]",
           ],
         },
       },
     },
     ended: {
-      entry: ({ context }) => {
-        console.log('entry ended state; context:', context);
-      },
+      entry: "inline:sandhyaPlayerMachine.ended#entry[0]",
       type: 'final',
     },
   },
