@@ -1,11 +1,7 @@
 import { Lesson } from './Lesson';
+import { LoopType } from './Step';
 
-export interface LoopSettings {
-  gayatriCount: number;
-  ashtakshariCount: number;
-  panchakshariCount: number;
-  pranayamaCount: number;
-}
+export type LoopSettings = Record<LoopType, number>;
 
 export interface SessionSettings {
   sandhyaTime: 'pratah' | 'sayam';

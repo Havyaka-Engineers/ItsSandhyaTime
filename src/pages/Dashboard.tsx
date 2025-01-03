@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import { Block } from 'konsta/react';
 import { SessionSettings } from '../types/SessionSettings';
 import { Lesson } from '../types/Lesson';
@@ -204,7 +204,7 @@ const fetchAndSendSunTimes = async () => {
 };
 
 const Dashboard: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { userSettings } = useUserSettings();
   const [location, setLocation] = useState<Location | null>(null);
   const [sunTimes, setSunTimes] = useState<SunTimes>({ sunrise: '', sunset: '' });
@@ -243,10 +243,10 @@ const Dashboard: React.FC = () => {
     duration: 0,
     lessons: [],
     loops: {
-      gayatriCount: 10,
-      ashtakshariCount: 28,
-      panchakshariCount: 54,
-      pranayamaCount: 3,
+      gayatri: 10,
+      ashtakshari: 28,
+      panchakshari: 54,
+      pranayama: 3,
     },
   };
 
@@ -314,12 +314,12 @@ const Dashboard: React.FC = () => {
   //   navigate('/review-settings');
   // };
 
-  // const handleSandhyaSessionClick = () => {
-  //   showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
-  //     type: 'session_start',
-  //   });
-  //   navigate('/player', { state: { sessionSettings } });
-  // };
+  const handleSandhyaSessionClick = () => {
+    // showNotification('Sandhya Session Started', 'Your sandhya session has begun. May your practice be blessed! 🙏', {
+    //   type: 'session_start',
+    // });
+    navigate('/player', { state: { sessionSettings } });
+  };
 
   // Function to fetch location and sunrise/sunset data
   const fetchSunriseSunsetData = async () => {
@@ -477,7 +477,7 @@ const Dashboard: React.FC = () => {
               <p className="text-sm">Sunrise</p>
               <button
                 className="bg-[#8A2C0D] text-[#8B0000] px-4 py-2 rounded-lg shadow mt-6"
-                onClick={() => setIsStartDialogOpen(true)} // Open dialog
+                onClick={handleSandhyaSessionClick} // Open dialog
               >
                 <img src={start_button} alt="Logo" className="w-15 h-auto" />
               </button>

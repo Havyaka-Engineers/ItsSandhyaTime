@@ -5,9 +5,9 @@ import { auth } from './firebase.config';
 import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
 import SplashScreen from './components/SplashScreen';
-import SandhyaPlayer from './pages/SandhyaPlayer';
-import ReviewSessionSetting from './pages/ReviewSessionSetting';
-import SandhyaSession from './pages/SandhyaSession';
+// import SandhyaPlayer from './pages/SandhyaPlayer';
+// import ReviewSessionSetting from './pages/ReviewSessionSetting';
+// import SandhyaSession from './pages/SandhyaSession';
 import { User } from 'firebase/auth';
 import UserSettings from './pages/UserSettings';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
@@ -86,9 +86,9 @@ function App() {
           <Route path="/onboarding" element={<UserSettings />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/signin" element={<SignIn />} />
-          <Route path="/review-settings" element={<ReviewSessionSetting />} />
-          <Route path="/sandhya-player" element={<SandhyaPlayer />} />
-          <Route path="/sandhya-session" element={<SandhyaSession />} />
+          {/* <Route path="/review-settings" element={<ReviewSessionSetting />} /> */}
+          {/* <Route path="/sandhya-player" element={<SandhyaPlayer />} /> */}
+          {/* <Route path="/sandhya-session" element={<SandhyaSession />} /> */}
           <Route path="/player" element={<Player />} />
         </Routes>
       </Router>
