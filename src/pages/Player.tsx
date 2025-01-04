@@ -2,8 +2,8 @@ import { Page } from 'konsta/react';
 import { useLocation } from 'react-router-dom';
 import { SessionSettings } from '../types/SessionSettings';
 import { useEffect, useRef } from 'react';
-import { SandhyaPlayerMachine } from '../machines/SandhyaPlayerMachine';
 import { useMachine } from '@xstate/react';
+import { playerMachine } from '../machines/PlayerMachine';
 import PlayerTopBar from '../components/PlayerTopBar';
 import PlayerBottomBar from '../components/PlayerBottomBar';
 
@@ -13,7 +13,7 @@ function Player() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Initialize the machine with settings
-  const [state, send] = useMachine(SandhyaPlayerMachine, {
+  const [state, send] = useMachine(playerMachine, {
     input: {
       sessionSettings: sessionSettings,
     },
@@ -22,14 +22,9 @@ function Player() {
   // Send the session started event when the container is mounted
   useEffect(() => {
     if (containerRef.current) {
-      send({ type: 'SESSION_STARTED', container: containerRef.current });
+      send({ type: 'VIMEO_CONTAINER_AVAILABLE', container: containerRef.current });
     }
   }, [containerRef.current, send]);
-
-  // Log the current state value
-  useEffect(() => {
-    console.log('current satate value', state.value);
-  }, [state, send]);
 
   // check if we are in playing state
   const isPlaying = state.matches('playingLesson');
@@ -40,10 +35,10 @@ function Player() {
     console.log('Current playing state:', isPlaying);
     if (isPlaying) {
       console.log('Sending PAUSE event');
-      send({ type: 'PAUSE' });
+      // send({ type: 'PAUSE' });
     } else {
       console.log('Sending RESUME event');
-      send({ type: 'RESUME' });
+      // send({ type: 'RESUME' });
     }
   };
 
