@@ -1,16 +1,19 @@
 import { Page } from 'konsta/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SessionSettings } from '../types/SessionSettings';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMachine } from '@xstate/react';
 import { playerMachine } from '../machines/PlayerMachine';
 import PlayerTopBar from '../components/PlayerTopBar';
 import PlayerBottomBar from '../components/PlayerBottomBar';
+import SessionCompleted from '../components/SessionCompleted';
 
 function Player() {
   const location = useLocation();
   const sessionSettings = location.state?.sessionSettings as SessionSettings;
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isSessionEnded, setIsSessionEnded] = useState(true);
+  const navigate = useNavigate();
 
   // Initialize the machine with settings
   const [state, send] = useMachine(playerMachine, {
@@ -19,57 +22,70 @@ function Player() {
     },
   });
 
-  // Send the session started event when the container is mounted
+  // Effect for handling vimeo container mounting
   useEffect(() => {
     if (containerRef.current) {
       send({ type: 'VIMEO_CONTAINER_AVAILABLE', container: containerRef.current });
     }
   }, [containerRef.current, send]);
 
-  // check if we are in playing state
-  const isPlaying = state.matches('playingLesson');
+  // Effect for tracking machine state changes
+  useEffect(() => {
+    console.log('current state', state.value);
+    if (state.value === 'endingSession') {
+      console.log('isSessionEnded', isSessionEnded);
+      setIsSessionEnded(true);
+    }
+  }, [state]);
 
   // Handle tap on video container
   const handleVideoTap = () => {
-    console.log('handleVideoTap triggered');
-    console.log('Current playing state:', isPlaying);
-    if (isPlaying) {
-      console.log('Sending PAUSE event');
-      // send({ type: 'PAUSE' });
-    } else {
-      console.log('Sending RESUME event');
-      // send({ type: 'RESUME' });
-    }
+    //todo: handle video tap
+  };
+
+  const handleSessionEndClose = () => {
+    setIsSessionEnded(false);
+    navigate('/dashboard');
+  };
+
+  const handleSessionFeedback = () => {
+    // Implement feedback handling logic
   };
 
   return (
     <Page className="h-screen flex flex-col bg-gray-100">
-      <PlayerTopBar
-        currentLessonIndex={state.context.currentLessonIndex}
-        totalLessons={state.context.lessons.length}
-        timeElapsed={state.context.timeElapsed}
-        sessionDuration={state.context.sessionDuration}
-        lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
-      />
+      {isSessionEnded ? (
+        <SessionCompleted onClose={handleSessionEndClose} onFeedback={handleSessionFeedback} />
+      ) : (
+        <>
+          <PlayerTopBar
+            currentLessonIndex={state.context.currentLessonIndex}
+            totalLessons={state.context.lessons.length}
+            timeElapsed={state.context.timeElapsed}
+            sessionDuration={state.context.sessionDuration}
+            lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
+          />
 
-      {/* Video Container - Using 9:16 aspect ratio */}
-      <div className="flex-1 flex items-center justify-center bg-gray-900">
-        <div className="w-full relative" style={{ aspectRatio: '9/16' }}>
-          {/* Vimeo container */}
-          <div ref={containerRef} className="absolute inset-0 bg-black">
-            {/* Vimeo player will be mounted here */}
+          {/* Video Container - Using 9:16 aspect ratio */}
+          <div className="flex-1 flex items-center justify-center bg-gray-900">
+            <div className="w-full relative" style={{ aspectRatio: '9/16' }}>
+              {/* Vimeo container */}
+              <div ref={containerRef} className="absolute inset-0 bg-black">
+                {/* Vimeo player will be mounted here */}
+              </div>
+
+              {/* Transparent overlay for click handling */}
+              <div className="absolute inset-0 z-10 cursor-pointer" onClick={handleVideoTap} />
+            </div>
           </div>
 
-          {/* Transparent overlay for click handling */}
-          <div className="absolute inset-0 z-10 cursor-pointer" onClick={handleVideoTap} />
-        </div>
-      </div>
-
-      <PlayerBottomBar
-        currentLessonIndex={state.context.currentLessonIndex}
-        totalLessons={state.context.lessons.length}
-        lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
-      />
+          <PlayerBottomBar
+            currentLessonIndex={state.context.currentLessonIndex}
+            totalLessons={state.context.lessons.length}
+            lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
+          />
+        </>
+      )}
     </Page>
   );
 }
