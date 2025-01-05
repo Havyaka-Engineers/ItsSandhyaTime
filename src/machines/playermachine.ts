@@ -16,7 +16,7 @@ export const playerMachine = setup({
     vimeoPlayerActor: createVimeoPlayerActor(),
   },
 }).createMachine({
-  /** @xstate-layout N4IgpgJg5mDOIC5QAUA2BDAnmATgWXQGMALASwDswA6Ad3VIBcKoAxAexwDVSBbMNgMJtyDepRwBiTgEk8AUQDyAfQEKAcgBUAgtLVyASkq2cdAGS0AhU3IDaABgC6iUAAc2sRqWHOQAD0QATACcdlQAzABsAQAsQQF20QAcifEA7NEANCCYiGHBVKlBRYl5EQCsQRGxZQC+NVloWLgEJBTUhDhg6EzkUNx8bI3YkjLyysjmAJoGKvpyWhpyACL2Tkggbh5M3uv+CIkAjIkF6UVREYmpdpdZOQh5QQVFQSUB5ZXVdQ0Ywy1klFQAGZgBitXqmOCwYQSawAZVh6iULDkGgEAAllqsfJtPDtQHsgmUwlQyjEXtEie8DmFbohqaFnmcUmVokkkl8QENmkR-tQXD9mBDYFDyDC5PDEXI1EtMY5se5ceQfHtDsdUqdKm9LtdUrT9gdwnYjUaAgciQcgpEOVz8Dy2lR+VhBZDoXCEWolFKZSsDmtXArtkrdohVSdYpqLlcbtk6YlQhFGWFomEymV1RFrT9uWC+QLwS7RXoABoaJRu9RY9Y4wPKkNHMNnLVR3UxhABMKhMKMo0Uq4RVIBTNNW05h15qBCkUSZBzThl8Xuyv+rZeIP4utqjXnbXRu4BONUOzPRIRcplErnsJ1eogchsCBwHw2v5teUrvF+RAAWgiep-Q9+O0AToTxenYLheH4IQRDEXA30VWsEGiAI9QeKhEmPY0IjNIIDgA7NeSoDouh6PpIMGLMcHgmtgwQS8STCdIUlNdUUhpVs0Iws51RCMo7HSfCR0I4FQX+CcC2o1dEIOA4oioSNqnPKJyT1dsAioRkggHMoqgqVlBJfAFHUwZ1hQ-aspNoqJog0jUKkiaIj3Yu5CUPU9TzseyWTyQcb2fIDqDAcgIGYWFIUs5cENomS5IUwklOCRJMlbQ5wmPaJUi7E8jlqa8gA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAUA2BDAnmATgWXQGMALASwDswA6Ad3VIBcKoAxAexwDVSBbMNgMJtyDepRwBiTgEk8AUQDyAfQEKAcgBUAgtLVyASkq2cdAGS0AhU3IDaABgC6iUAAc2sRqWHOQAD0QATACcdlQAzABsAQAsQQF20QAcifEA7NEANCCYiGHBVKlBRYl5EQCsQRGxZQC+NVloWLgEJBTUhDhg6EzkUNx8bI3YkjLyysjmAJoGKvpyWhpyACL2Tkggbh5M3uv+CIkAjIkF6UVREYmpdpdZOQh5QQVFQSUB5ZXVdQ0Ywy1klFQAGZgBitXqmOCwYQSawAZVh6iULDkGgEAAllqsfJtPDtQHsgmUwlQyjEXtEie8DmFbohqaFnmcUmVokkkl8QENmkR-tQXD9mBDYFDyDC5PDEXI1EtMY5se5ceQfHtDsdUqdKm9LtdUrT9gdwnYjUaAgciQcgpEOVz8Dy2lR+VhBZDoXCEWolFKZSsDmtXArtkrdohVSdYpqLlcbtk6YlQhFGWFomEymV1RE6vUQOQ2BA4D4bX82vKtl4g-jEABaCJ66tUY12SJXVIHOxxRvWn7csHUOieXrsLi8fhCERiXAlxXKxDRAJ6h5URLPONGiJmoIHTtNW09qgdLo9PrDwZdnCTwPThBlEoksLpFKm9UpGkx+75JdndUhMp2dJb352gCwKgv8UBCiK55lpeBwHFEVCRtU15ROSeoBHkVCMkEqQBGUVQVKy-7dryDoCuCLrlhsAZQcGCBRNEGEahUkTRG2L53IS9YRFxER2ExLJ5AEhE7sRYDkBAzCwpC1H+qWeJ+HSsEBPBlyIYkyGJJkr6HOEy7RKkYQvGuiS1JmQA */
   context: ({ input }) => ({
     container: document.createElement('div'), //dummy container,
     lessons: input.sessionSettings.lessons,
@@ -74,14 +74,14 @@ export const playerMachine = setup({
       ],
       on: {
         LESSON_FETCHED: {
-          target: 'playingLesson',
+          target: 'currentLesson',
         },
       },
     },
-    playingLesson: {
+    currentLesson: {
       entry: [
         () => {
-          console.log('entered state: playingLesson');
+          console.log('entered state: currentLesson');
         },
       ],
       on: {
@@ -94,6 +94,9 @@ export const playerMachine = setup({
           },
           {
             target: 'fetchingLesson',
+            actions: assign({
+              currentLessonIndex: ({ context }) => context.currentLessonIndex + 1,
+            }),
           },
         ],
       },

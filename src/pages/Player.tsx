@@ -12,7 +12,7 @@ function Player() {
   const location = useLocation();
   const sessionSettings = location.state?.sessionSettings as SessionSettings;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSessionEnded, setIsSessionEnded] = useState(true);
+  const [isSessionEnded, setIsSessionEnded] = useState(false);
   const navigate = useNavigate();
 
   // Initialize the machine with settings
