@@ -22,9 +22,9 @@ export interface PlayerInput {
 }
 
 export type PlayerEvents =
-  | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement }
+  // vimeo player events
   | { type: 'VIMEO_PLAYER_CREATED' }
-  | { type: 'LESSON_FETCHED' }
-  | { type: 'LESSON_ENDED' }
-  | { type: 'NEXT_LESSON' }
-  | { type: 'PREV_LESSON' };
+  | { type: 'VIDEO_LOADED' }
+  | { type: 'VIDEO_ENDED' }
+  // user interface events
+  | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement };

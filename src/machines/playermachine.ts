@@ -73,7 +73,7 @@ export const playerMachine = setup({
         })),
       ],
       on: {
-        LESSON_FETCHED: {
+        VIDEO_LOADED: {
           target: 'currentLesson',
         },
       },
@@ -85,7 +85,7 @@ export const playerMachine = setup({
         },
       ],
       on: {
-        LESSON_ENDED: [
+        VIDEO_ENDED: [
           {
             target: 'endingSession',
             guard: {

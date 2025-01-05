@@ -28,12 +28,12 @@ export const createVimeoPlayerActor = () => {
 
         // Send back the event when the video is loaded
         player.on('loaded', () => {
-          sendBack({ type: 'LESSON_FETCHED' });
+          sendBack({ type: 'VIDEO_LOADED' });
         });
 
         // Send back the event when the video is ended
         player.on('ended', () => {
-          sendBack({ type: 'LESSON_ENDED' });
+          sendBack({ type: 'VIDEO_ENDED' });
         });
       }
     });
