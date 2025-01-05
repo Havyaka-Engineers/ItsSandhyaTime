@@ -74,14 +74,15 @@ export const playerMachine = setup({
       ],
       on: {
         VIDEO_LOADED: {
-          target: 'currentLesson',
+          target: 'lessonActive',
         },
       },
     },
-    currentLesson: {
+    lessonActive: {
+      initial: 'videoLoaded',
       entry: [
         () => {
-          console.log('entered state: currentLesson');
+          console.log('entered state: lessonActive');
         },
       ],
       on: {
@@ -99,6 +100,25 @@ export const playerMachine = setup({
             }),
           },
         ],
+        VIDEO_PLAY: {
+          target: '#PlayerMachine.lessonActive.videoPlaying',
+        },
+        VIDEO_PAUSE: {
+          target: '#PlayerMachine.lessonActive.videoPaused',
+        },
+        VIDEO_BUFFER_START: {
+          target: '#PlayerMachine.lessonActive.videoBuffering',
+        },
+        VIDEO_ERROR: {
+          target: '#PlayerMachine.lessonActive.videoError',
+        },
+      },
+      states: {
+        videoLoaded: {},
+        videoPlaying: {},
+        videoPaused: {},
+        videoBuffering: {},
+        videoError: {},
       },
     },
     endingSession: {

@@ -26,5 +26,10 @@ export type PlayerEvents =
   | { type: 'VIMEO_PLAYER_CREATED' }
   | { type: 'VIDEO_LOADED' }
   | { type: 'VIDEO_ENDED' }
+  | { type: 'VIDEO_PLAY' }
+  | { type: 'VIDEO_PAUSE' }
+  | { type: 'VIDEO_BUFFER_START' }
+  | { type: 'VIDEO_ERROR' }
+
   // user interface events
   | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement };

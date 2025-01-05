@@ -28,12 +28,35 @@ export const createVimeoPlayerActor = () => {
 
         // Send back the event when the video is loaded
         player.on('loaded', () => {
+          //temporary hack
+          player!.setPlaybackRate(2);
+
           sendBack({ type: 'VIDEO_LOADED' });
         });
 
         // Send back the event when the video is ended
         player.on('ended', () => {
           sendBack({ type: 'VIDEO_ENDED' });
+        });
+
+        // Send back the event when the video is played
+        player.on('play', () => {
+          sendBack({ type: 'VIDEO_PLAY' });
+        });
+
+        // Send back the event when the video is paused
+        player.on('pause', () => {
+          sendBack({ type: 'VIDEO_PAUSE' });
+        });
+
+        // Send back the event when the video is buffering
+        player.on('bufferstart', () => {
+          sendBack({ type: 'VIDEO_BUFFER_START' });
+        });
+
+        // Send back the event when the video is error
+        player.on('error', () => {
+          sendBack({ type: 'VIDEO_ERROR' });
         });
       }
     });
