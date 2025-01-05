@@ -32,4 +32,5 @@ export type PlayerEvents =
   | { type: 'VIDEO_ERROR' }
 
   // user interface events
-  | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement };
+  | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement }
+  | { type: 'TOGGLE_PLAY' };

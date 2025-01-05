@@ -1,7 +1,7 @@
 import { Page } from 'konsta/react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SessionSettings } from '../types/SessionSettings';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMachine } from '@xstate/react';
 import { playerMachine } from '../machines/PlayerMachine';
 import PlayerTopBar from '../components/PlayerTopBar';
@@ -12,7 +12,6 @@ function Player() {
   const location = useLocation();
   const sessionSettings = location.state?.sessionSettings as SessionSettings;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isSessionEnded, setIsSessionEnded] = useState(false);
   const navigate = useNavigate();
 
   // Initialize the machine with settings
@@ -32,19 +31,22 @@ function Player() {
   // Effect for tracking machine state changes
   useEffect(() => {
     console.log('current state', state.value);
-    if (state.value === 'endingSession') {
-      console.log('isSessionEnded', isSessionEnded);
-      setIsSessionEnded(true);
-    }
   }, [state]);
+
+  // Compute this directly from state
+  const isVideoControllable = state.matches({ lessonActive: 'videoPlaying' }) || state.matches({ lessonActive: 'videoPaused' });
+
+  const isSessionEnded = state.matches('endingSession');
 
   // Handle tap on video container
   const handleVideoTap = () => {
-    //todo: handle video tap
+    if (isVideoControllable) {
+      console.log('handleVideoTap');
+      send({ type: 'TOGGLE_PLAY' });
+    }
   };
 
   const handleSessionEndClose = () => {
-    setIsSessionEnded(false);
     navigate('/dashboard');
   };
 

@@ -77,6 +77,14 @@ export const createVimeoPlayerActor = () => {
             step,
           });
         });
+      } else if (event.type === 'TOGGLE_PLAY') {
+        player!.getPaused().then((paused) => {
+          if (paused) {
+            player!.play();
+          } else {
+            player!.pause();
+          }
+        });
       }
     });
 

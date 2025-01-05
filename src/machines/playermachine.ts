@@ -115,8 +115,20 @@ export const playerMachine = setup({
       },
       states: {
         videoLoaded: {},
-        videoPlaying: {},
-        videoPaused: {},
+        videoPlaying: {
+          on: {
+            TOGGLE_PLAY: {
+              actions: sendTo('vimeoPlayerActor', { type: 'TOGGLE_PLAY' }),
+            },
+          },
+        },
+        videoPaused: {
+          on: {
+            TOGGLE_PLAY: {
+              actions: sendTo('vimeoPlayerActor', { type: 'TOGGLE_PLAY' }),
+            },
+          },
+        },
         videoBuffering: {},
         videoError: {},
       },
