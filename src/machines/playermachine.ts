@@ -69,7 +69,7 @@ export const playerMachine = setup({
         },
         sendTo('vimeoPlayerActor', ({ context }) => ({
           type: 'LOAD_VIDEO',
-          videoId: context.lessons[context.currentLessonIndex].videoId,
+          lesson: context.lessons[context.currentLessonIndex],
         })),
       ],
       on: {

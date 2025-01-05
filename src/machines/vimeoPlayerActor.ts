@@ -1,5 +1,6 @@
 import { fromCallback } from 'xstate';
 import Player from '@vimeo/player';
+import { Lesson } from '../types/Lesson';
 
 export const createVimeoPlayerActor = () => {
   return fromCallback(({ sendBack, receive, input }: { sendBack: any; receive: any; input: { container: HTMLElement } }) => {
@@ -10,14 +11,16 @@ export const createVimeoPlayerActor = () => {
 
     receive((event: any) => {
       if (event.type === 'LOAD_VIDEO') {
+        const lesson: Lesson = event.lesson;
+
         // Cleanup existing player if any
         if (player) {
           player.destroy();
         }
 
-        // Create new player with the actual video ID
+        // Create new player with the video ID from the lesson
         player = new Player(input.container, {
-          id: event.videoId,
+          id: lesson.videoId,
           autopause: false,
           autoplay: true,
           controls: false,
@@ -58,14 +61,24 @@ export const createVimeoPlayerActor = () => {
         player.on('error', () => {
           sendBack({ type: 'VIDEO_ERROR' });
         });
+
+        // Set up cue points for each step
+        lesson.steps.forEach((step) => {
+          player!.addCuePoint(step.startTime, {
+            customKey: step,
+          });
+        });
+
+        // Handle cue point events
+        player.on('cuepoint', (data) => {
+          const step = data.data.customKey;
+          sendBack({
+            type: 'STEP_STARTED',
+            step,
+          });
+        });
       }
     });
-
-    // Create the Vimeo player instance
-    // const player = new Player(input.container, {
-    //   // Add any Vimeo player options here
-    //   responsive: true,
-    // });
 
     // Clean up function
     return () => {
