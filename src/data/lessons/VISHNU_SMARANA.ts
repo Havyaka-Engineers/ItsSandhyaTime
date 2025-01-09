@@ -5,7 +5,7 @@ export const VISHNU_SMARANA: Lesson = {
   title: 'Vishnu Smarana',
   videoId: 1042133772,
   description: 'Vishnu Smarana',
-  duration: 23,
+  duration: 24.87,
   steps: [
     {
       startTime: 0,

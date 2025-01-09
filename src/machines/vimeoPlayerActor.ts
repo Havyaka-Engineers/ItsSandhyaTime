@@ -5,6 +5,7 @@ import { Lesson } from '../types/Lesson';
 export const createVimeoPlayerActor = () => {
   return fromCallback(({ sendBack, receive, input }: { sendBack: any; receive: any; input: { container: HTMLElement } }) => {
     let player: Player | null = null;
+    let isSeeked = false;
 
     // Send ready immediately since we don't need to wait for player initialization
     sendBack({ type: 'VIMEO_PLAYER_CREATED' });
@@ -63,19 +64,31 @@ export const createVimeoPlayerActor = () => {
         });
 
         // Set up cue points for each step
-        lesson.steps.forEach((step) => {
-          player!.addCuePoint(step.startTime, {
-            customKey: step,
+        lesson.steps.forEach((step, index) => {
+          const stepEndTime = index < lesson.steps.length - 1 ? lesson.steps[index + 1].startTime : lesson.duration - 1;
+
+          player!.addCuePoint(stepEndTime, {
+            customKey: {
+              stepIndex: index,
+              stepType: step.stepType,
+              stepStartTime: step.startTime,
+              stepEndTime: stepEndTime,
+            },
           });
         });
 
         // Handle cue point events
         player.on('cuepoint', (data) => {
-          const step = data.data.customKey;
-          sendBack({
-            type: 'STEP_STARTED',
-            step,
-          });
+          if (isSeeked) {
+            isSeeked = false;
+            return;
+          } else {
+            const step = data.data.customKey;
+            sendBack({
+              type: 'STEP_ENDED',
+              step,
+            });
+          }
         });
       } else if (event.type === 'TOGGLE_PLAY') {
         player!.getPaused().then((paused) => {
@@ -85,6 +98,10 @@ export const createVimeoPlayerActor = () => {
             player!.pause();
           }
         });
+      } else if (event.type === 'SEEK_TO') {
+        console.log('seeking to', event.time);
+        player!.setCurrentTime(event.time);
+        isSeeked = true;
       }
     });
 

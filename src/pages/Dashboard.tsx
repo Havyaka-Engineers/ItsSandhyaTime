@@ -236,7 +236,7 @@ const Dashboard: React.FC = () => {
   // Initialize session settings
   let sessionSettings: SessionSettings = {
     sandhyaTime: 'pratah',
-    learningMode: 'perform',
+    learningMode: 'repeat',
     chantingSpeed: 'slow',
     vocalPitch: 'deep',
     language: 'english',

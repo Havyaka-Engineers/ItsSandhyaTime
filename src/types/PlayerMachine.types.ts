@@ -1,5 +1,6 @@
 import { Lesson } from './Lesson';
 import { SessionSettings } from './SessionSettings';
+import { Step } from './Step';
 
 /**
  * Represents the context state of the player machine
@@ -11,10 +12,12 @@ export interface PlayerContext {
   lessons: Lesson[];
   /** Index of the currently playing lesson */
   currentLessonIndex: number;
+
+  currentStepIndex: number;
   /** Time elapsed in the current session (in seconds) */
   timeElapsed: number;
-  /** Total duration of the session (in seconds) */
-  sessionDuration: number;
+
+  sessionSettings: SessionSettings;
 }
 
 export interface PlayerInput {
@@ -30,6 +33,7 @@ export type PlayerEvents =
   | { type: 'VIDEO_PAUSE' }
   | { type: 'VIDEO_BUFFER_START' }
   | { type: 'VIDEO_ERROR' }
+  | { type: 'STEP_ENDED'; step: Step }
 
   // user interface events
   | { type: 'VIMEO_CONTAINER_AVAILABLE'; container: HTMLDivElement }

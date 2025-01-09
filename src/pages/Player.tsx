@@ -30,7 +30,7 @@ function Player() {
 
   // Effect for tracking machine state changes
   useEffect(() => {
-    console.log('current state', state.value);
+    console.log('current state', state.value, state.context.currentStepIndex);
   }, [state]);
 
   // Compute this directly from state
@@ -64,7 +64,7 @@ function Player() {
             currentLessonIndex={state.context.currentLessonIndex}
             totalLessons={state.context.lessons.length}
             timeElapsed={state.context.timeElapsed}
-            sessionDuration={state.context.sessionDuration}
+            sessionDuration={state.context.sessionSettings.duration}
             lessonTitle={state.context.lessons[state.context.currentLessonIndex]?.title || ''}
           />
 

@@ -15,13 +15,13 @@ const MODE_MULTIPLIERS = {
 };
 
 export function calculateLessonDuration(lesson: Lesson, settings: SessionSettings): number {
-  console.log(`\nCalculating duration for lesson: ${lesson.code}`);
-  console.log(`Initial duration: ${lesson.duration} seconds`);
+  // console.log(`\nCalculating duration for lesson: ${lesson.code}`);
+  // console.log(`Initial duration: ${lesson.duration} seconds`);
 
   let duration = lesson.duration;
-  console.log('settings', settings);
-  console.log('MODE_MULTIPLIERS', MODE_MULTIPLIERS);
-  console.log('SPEED_MULTIPLIERS', SPEED_MULTIPLIERS);
+  // console.log('settings', settings);
+  // console.log('MODE_MULTIPLIERS', MODE_MULTIPLIERS);
+  // console.log('SPEED_MULTIPLIERS', SPEED_MULTIPLIERS);
 
   // // Apply speed multiplier
   // const speedMultiplier = SPEED_MULTIPLIERS[settings.chantingSpeed];
