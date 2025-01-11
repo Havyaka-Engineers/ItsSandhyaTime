@@ -5,7 +5,7 @@ export const ACHAMANA: Lesson = {
   title: 'Achamana',
   videoId: 1042137642,
   description: 'Achamana',
-  duration: 25,
+  duration: 26.53,
   steps: [
     {
       startTime: 0,
