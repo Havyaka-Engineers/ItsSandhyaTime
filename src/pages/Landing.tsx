@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../assets/background-pattern.svg';
 
 const calculateTimeLeft = () => {
-  const launchDate = new Date('2025-01-14T00:00:00');
+  const launchDate = new Date('2025-01-31T00:00:00');
   const difference = launchDate.getTime() - new Date().getTime();
 
   if (difference <= 0) {
@@ -74,6 +74,14 @@ const Landing = () => {
                 <div className="text-sm text-gray-300">secs</div>
               </div>
             </div>
+          </div>
+
+          {/* Festival Wishes and Contact Info */}
+          <div className="text-center text-white mt-8">
+            <h2 className="text-2xl text-yellow-500 font-bold mb-4">ಶುಭ ಸಂಕ್ರಾಂತಿ</h2>
+            <p className="text-lg px-4 max-w-md">
+              We require a bit more time to complete the app, interested interns are welcome and can contact 9740080146
+            </p>
           </div>
         </div>
       </div>
